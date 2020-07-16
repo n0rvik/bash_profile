@@ -5,17 +5,9 @@
 
 # User specific aliases and functions
 
-# You may uncomment the following lines if you want `ls' to be colorized:
-
-export LS_OPTIONS='--color=auto'
-eval "`dircolors`"
-alias ls='ls $LS_OPTIONS'
-alias ll='ls $LS_OPTIONS -l'
-alias l='ls $LS_OPTIONS -lA'
-
-#alias rm='rm -i'
-#alias cp='cp -i'
-#alias mv='mv -i'
+# alias rm='rm -i'
+# alias cp='cp -i'
+# alias mv='mv -i'
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -28,7 +20,7 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 # default path
-#PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+# PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -39,6 +31,6 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # modern path
-#PATH=$HOME/.local/bin:$HOME/bin:$PATH
+# PATH=$HOME/.local/bin:$HOME/bin:$PATH
 
 export PATH

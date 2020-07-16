@@ -30,7 +30,7 @@ export HISTCONTROL=ignorespace:ignoredups
 export HISTSIZE=100000
 export HISTFILESIZ=100000
 export HISTIGNORE="&:[bf]g:pwd:ls:ls -la:ls -ltr:ll:lld:lla:cd:exit:df:htop:atop:top:ps ax"
-export HISTTIMEFORMAT="%h/%d/%y - %H:%M:%S "
+export HISTTIMEFORMAT="%d/%h/%y - %H:%M:%S "
 # export HISTTIMEFORMAT='%h %d %H:%M:%S '
 # export HISTTIMEFORMAT="%d/%m/%y %T %t"
 
@@ -552,6 +552,9 @@ alias ls='/usr/bin/ls $LS_OPTIONS' 2>/dev/null
 alias ll='/usr/bin/ls $LS_OPTIONS -l' 2>/dev/null
 alias lld='/usr/bin/ls $LS_OPTIONS -ld' 2>/dev/null
 alias lla='/usr/bin/ls $LS_OPTIONS -lA' 2>/dev/null
+alias llh='/usr/bin/ls $LS_OPTIONS -lah --time-style=+%F\ %H:%M' 2>/dev/null
+alias llt='/usr/bin/ls $LS_OPTIONS -lah --sort=time' 2>/dev/null
+alias llr='/usr/bin/ls $LS_OPTIONS -lah --sort=time --revers' 2>/dev/null
 alias la='/usr/bin/ls $LS_OPTIONS -A' 2>/dev/null
 alias lt='/usr/bin/ls $LS_OPTIONS -ltr' 2>/dev/null
 alias l='/usr/bin/ls $LS_OPTIONS -CF' 2>/dev/null
@@ -654,7 +657,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-export PROMPT_COMMAND=myprompt
+PROMPT_COMMAND=myprompt
+export PROMPT_COMMAND
 
 COWSAY=`/usr/bin/which cowsay 2>/dev/null`
 FORTUNE=`/usr/bin/which fortune 2>/dev/null`
