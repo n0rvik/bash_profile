@@ -1,5 +1,5 @@
 #!/bin/sh
 
-mkdir -vp $HOME/.vim/colors
-cp -v ./*.vim $HOME/.vim/colors
-cp -v ./.vimrc $HOME
+cp -v ./.bash_aliases $HOME/.bash_aliases
+cp -v ./.bash_profile $HOME/.bash_profile
+cp -v ./.bashrc $HOME/.bashrc
