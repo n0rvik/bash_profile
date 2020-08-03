@@ -20,7 +20,7 @@ if [ -f ~/.bash_aliases ]; then
 fi
 
 # default path
-# PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:
 
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
