@@ -35,7 +35,8 @@ shopt -s checkwinsize
 
 export HISTCONTROL=ignorespace:ignoredups
 export HISTIGNORE="pwd:ls:ll"
-export HISTSIZE=10000
+export HISTSIZE=100000
+export HISTFILESIZ=100000
 export HISTTIMEFORMAT="%d/%h/%y - %H:%M:%S "
 
 bind 'set show-all-if-ambiguous On'
@@ -49,15 +50,24 @@ bind '"\e[D": backward-char'
 
 export LS_OPTIONS='--color=auto'
 
-alias ls='ls $LS_OPTIONS'
-alias ll='ls $LS_OPTIONS -l'
-alias lld='/usr/bin/ls $LS_OPTIONS -ld'
-alias lla='/usr/bin/ls $LS_OPTIONS -lA'
-alias llh='/usr/bin/ls $LS_OPTIONS -lah --time-style=+%F\ %H:%M'
-alias llt='/usr/bin/ls $LS_OPTIONS -lah --sort=time'
-alias llr='/usr/bin/ls $LS_OPTIONS -lah --sort=time --revers'
-alias l='/usr/bin/ls $LS_OPTIONS -CF'
-alias l.='/usr/bin/ls -d .* $LS_OPTIONS'
+alias og='/usr/bin/ls $LS_OPTIONS -ogrt' 2>/dev/null
+alias ls='/usr/bin/ls $LS_OPTIONS' 2>/dev/null
+alias ll='/usr/bin/ls $LS_OPTIONS -l' 2>/dev/null
+alias lld='/usr/bin/ls $LS_OPTIONS -ld' 2>/dev/null
+alias lla='/usr/bin/ls $LS_OPTIONS -lA' 2>/dev/null
+alias llh='/usr/bin/ls $LS_OPTIONS -lah --time-style=+%F\ %H:%M' 2>/dev/null
+alias llt='/usr/bin/ls $LS_OPTIONS -lah --sort=time' 2>/dev/null
+alias llr='/usr/bin/ls $LS_OPTIONS -lah --sort=time --revers' 2>/dev/null
+alias la='/usr/bin/ls $LS_OPTIONS -A' 2>/dev/null
+alias lt='/usr/bin/ls $LS_OPTIONS -ltr' 2>/dev/null
+alias l='/usr/bin/ls $LS_OPTIONS -CF' 2>/dev/null
+alias l.='/usr/bin/ls -d .* $LS_OPTIONS' 2>/dev/null
+alias lsl='/usr/bin/ls -lhFA | less'
+alias lsdate='/usr/bin/ls $LS_OPTIONS -l --time-style="+%d-%m-%Y"' 2>/dev/null
+
+alias grep='/usr/bin/grep --color=auto'
+alias fgrep='/usr/bin/grep --color=auto'
+alias egrep='/usr/bin/grep --color=auto'
 
 alias h='history 10'
 
