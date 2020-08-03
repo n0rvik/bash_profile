@@ -6,3 +6,5 @@ if [ -f ~/.bashrc ]; then
 fi
 
 # User specific environment and startup programs
+
+# PATH=$HOME/.local/bin:$HOME/bin:$PATH
