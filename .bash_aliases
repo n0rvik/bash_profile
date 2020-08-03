@@ -215,6 +215,10 @@ my_mc() {
 # ############
 # myprompt
 # ############
+
+# Defaulst PS1
+# PS1="[\u@\h \W]\\$ "
+# PS1="[\u@\h:\l \W]\\$ "
                                                           	
 myprompt() {
     # Сброс
@@ -528,8 +532,6 @@ bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
-
-umask 022
 
 # add optional items to the path
 #for bindir in $HOME/.local/bin $HOME/bin; do

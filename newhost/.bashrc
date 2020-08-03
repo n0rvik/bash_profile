@@ -76,7 +76,8 @@ if type vim &>/dev/null; then
 fi
 
 # Defaulst PS1
-# PS1='[\u@\h \W]\$'
+# PS1="[\u@\h \W]\\$ "
+# PS1="[\u@\h:\l \W]\\$ "
 
 PROMPT_COMMAND='history -a'
 if [ "$(id -u)" == "0" ]; then
