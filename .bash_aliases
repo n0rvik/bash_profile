@@ -660,7 +660,7 @@ if ! shopt -oq posix; then
 fi
 
 PROMPT_COMMAND=myprompt
-export PROMPT_COMMAND
+#export PROMPT_COMMAND
 
 COWSAY=`/usr/bin/which cowsay 2>/dev/null`
 FORTUNE=`/usr/bin/which fortune 2>/dev/null`
