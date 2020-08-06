@@ -534,17 +534,23 @@ bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
 # add optional items to the path
-#for bindir in $HOME/.local/bin $HOME/bin; do
-#    if [ -d $bindir ]; then
-#        PATH=${bindir}:$PATH
-#    fi
-#done
+# for bindir in $HOME/bin $HOME/.local/bin; do
+#     if [ -d $bindir ]; then
+#         PATH=${bindir}:$PATH
+#     fi
+# done
 
-# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$HOME/bin
+# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$HOME/.local/bin:$HOME/bin
 # export PATH
 
-if [ -x /usr/bin/dircolors ]; then
-    /usr/bin/test -r ~/.dircolors && eval "$(/usr/bin/dircolors -b ~/.dircolors)" || eval "$(/usr/bin/dircolors -b)"
+if type -P dircolors &>/dev/null ; then
+    if [[ -f ~/.dir_colors ]] ; then
+        eval $(dircolors -b ~/.dir_colors)
+    elif [[ -f /etc/DIR_COLORS.256color ]] ; then
+        eval $(dircolors -b /etc/DIR_COLORS.256color)
+    elif [[ -f /etc/DIR_COLORS ]] ; then
+        eval $(dircolors -b /etc/DIR_COLORS)
+    fi
 fi
 
 export LS_OPTIONS='--color=auto'
@@ -621,8 +627,8 @@ alias mc='. /usr/libexec/mc/mc-wrapper.sh'
 
 alias myip="/usr/bin/ip a | /usr/bin/grep inet | /usr/bin/grep 'scope global'"
 
-if type vim &>/dev/null; then
-	alias vi=/usr/bin/vim
+if type -P vim &>/dev/null; then
+    alias vi=/usr/bin/vim
 fi
 
 # Install grc from https://github.com/garabik/grc
