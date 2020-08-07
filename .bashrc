@@ -21,7 +21,7 @@ fi
 
 # default path
 # user
-# PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
+# PATH=/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin
 # root
 # PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 
