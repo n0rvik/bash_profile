@@ -417,6 +417,7 @@ myprompt() {
         PS1="${Color_Off}$(my_mc)[\\u@\\h \\w]\\\$ "
     fi
     export PS1
+    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
 }
 
 # ############
@@ -462,23 +463,24 @@ myprompt2 () {
         PS1="${Color_Off}$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
     fi
     export PS1
+    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
 }
 
 revert_prompt() {
-	if [[ "$1" == 1 ]]; then
-		PROMPT_COMMAND='myprompt 1'
-	elif [[ "$1" == 2 ]]; then
-		PROMPT_COMMAND='myprompt2'
-	else
-		PROMPT_COMMAND='myprompt 0'
-	fi
-	export PROMPT_COMMAND
+    if [[ "$1" == 1 ]]; then
+        PROMPT_COMMAND='myprompt 1'
+    elif [[ "$1" == 2 ]]; then
+        PROMPT_COMMAND='myprompt2'
+    else
+        PROMPT_COMMAND='myprompt 0'
+    fi
+    export PROMPT_COMMAND
 }
 
 
 # prompt = '# _' | '$ _'
 easy_prompt() {
-    PROMPT_COMMAND='history -a'
+    PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
     if [[ "$(id -u)" -eq 0 ]]; then
     	PS1='\[\e[m\]\[\e[1;31m\]\$ \[\e[m\]'
     else
@@ -666,7 +668,7 @@ if ! shopt -oq posix; then
 fi
 
 PROMPT_COMMAND=myprompt
-#export PROMPT_COMMAND
+export PROMPT_COMMAND
 
 COWSAY=`/usr/bin/which cowsay 2>/dev/null`
 FORTUNE=`/usr/bin/which fortune 2>/dev/null`
@@ -678,3 +680,4 @@ if [ -n "$COWSAY" ]; then
         echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | $COWSAY
     fi
 fi
+
