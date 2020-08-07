@@ -48,6 +48,16 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
+if type -P dircolors &>/dev/null ; then
+    if [[ -f ~/.dir_colors ]] ; then
+        eval $(dircolors -b ~/.dir_colors)
+    elif [[ -f /etc/DIR_COLORS.256color ]] ; then
+        eval $(dircolors -b /etc/DIR_COLORS.256color)
+    elif [[ -f /etc/DIR_COLORS ]] ; then
+        eval $(dircolors -b /etc/DIR_COLORS)
+    fi
+fi
+
 export LS_OPTIONS='--color=auto'
 
 alias og='/usr/bin/ls $LS_OPTIONS -ogrt' 2>/dev/null
