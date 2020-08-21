@@ -1,5 +1,10 @@
 #!/bin/sh
 
+yum list installed zabbix-agent | grep -q zabbix-agent
+if [ $? -eq 0 ]; then
+   yum remove zabbix-agent
+fi
+
 rpm -Uvh https://repo.zabbix.com/zabbix/5.0/rhel/7/x86_64/zabbix-release-5.0-1.el7.noarch.rpm
 yum clean all
 yum install zabbix-agent
@@ -43,5 +48,7 @@ cat <<EOFF >zabbix-agent
         create 0664 zabbix zabbix
 }
 EOFF
+
+systemctl enable --now zabbix-agent
 
 exit 0
