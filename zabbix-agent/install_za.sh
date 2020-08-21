@@ -53,6 +53,7 @@ firewall-cmd --reload
 
 systemctl daemon-reload
 systemctl enable --now zabbix-agent
+systemctl is-enabled zabbix-agent.service
 
 # tail -f /var/log/zabbix/zabbix_agentd.log
 
