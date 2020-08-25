@@ -6,7 +6,7 @@
 
 _home=$HOME
 if [ ! "x$1" == "x" ]; then
-   if [ -d "$1" ]; then
+   if [ -d "/home/$1" ]; then
      _home=/home/$1
    else
      echo "Directory not exist. Stop."
