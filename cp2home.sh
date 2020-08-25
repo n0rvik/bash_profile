@@ -6,7 +6,12 @@
 
 _home=$HOME
 if [ ! "x$1" == "x" ]; then
-  _home=/home/$1
+   if [ -d "$1" ]; then
+     _home=/home/$1
+   else
+     echo "Directory not exist. Stop."
+     exit 1
+   fi
 fi
 
 cp -v ./.bash_aliases $_home/.bash_aliases
@@ -22,3 +27,5 @@ if [ ! "x$1" == "x" ]; then
                  $_home/.dir_colors \
                  $_home/.bash_logout
 fi
+
+exit 0
