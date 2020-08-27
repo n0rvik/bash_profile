@@ -51,9 +51,11 @@ EOFF
 firewall-cmd --permanent --zone=public --add-port=10050/tcp
 firewall-cmd --reload
 
+set -x
 systemctl daemon-reload
 systemctl enable --now zabbix-agent
 systemctl is-enabled zabbix-agent.service
+set +x
 
 # tail -f /var/log/zabbix/zabbix_agentd.log
 
