@@ -646,17 +646,18 @@ fi
 
 # Set the Less input preprocessor.
 if type lesspipe.sh &>/dev/null; then
-    export LESSOPEN='|/usr/local/bin/lesspipe.sh %s'
+    export LESS_ADVANCED_PREPROCESSOR=1
+    export LESSOPEN="|$(type -p lesspipe.sh) %s"
 fi
 
 if type pygmentize &>/dev/null; then
-    export LESSCOLORIZER='/usr/bin/pygmentize'
+    export LESSCOLORIZER=`type -p pygmentize`
 fi
 
 # [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 if type colordiff &>/dev/null ; then
-    alias diff='/usr/bin/colordiff'
+    alias diff=`type -p colordiff`
 fi
 
 if ! shopt -oq posix; then
@@ -670,14 +671,12 @@ fi
 PROMPT_COMMAND=myprompt
 export PROMPT_COMMAND
 
-COWSAY=`/usr/bin/which cowsay 2>/dev/null`
-FORTUNE=`/usr/bin/which fortune 2>/dev/null`
-
-if [ -n "$COWSAY" ]; then
-    if [ -n "$FORTUNE" ]; then
-        $FORTUNE | $COWSAY
+if type cowsay &>/dev/null; then
+    if type fortune &>/dev/null; then
+        export FORTUNE_FILE=/usr/share/games/fortunes/fortunes
+        fortune | cowsay
     else
-        echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | $COWSAY
+        echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | cowsay
     fi
 fi
 
