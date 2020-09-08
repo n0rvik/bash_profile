@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # FILE: /etc/cron.daily/aide
-# INSTALL: yum install -y mailx liblockfile postfix mutt
+# INSTALL: yum install aide mailx liblockfile postfix mutt
 # cp aise1.sh /etc/cron.daily/aide
 # chmod +x /etc/cron.daily/aide
 
