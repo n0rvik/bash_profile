@@ -23,11 +23,11 @@ if [ ${ret} -eq 0 ]; then
   cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 elif [ ${ret} -lt 8 ]; then
   # Some file is changed.
-  cat ${TMP} | mail -s "AIDE detects changes. Host: ${HOSTNAME}" ${MAIL_ADDR}
+  cat ${TMP} | mail -s "AIDE detects changes on ${HOSTNAME}" ${MAIL_ADDR}
   cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 else
   # Cannot update database.
-  cat ${TMP} | mail -s "AIDE fatal error. Host: ${HOSTNAME}" ${MAIL_ADDR}
+  cat ${TMP} | mail -s "AIDE fatal error on ${HOSTNAME}" ${MAIL_ADDR}
 fi
 
 dotlockfile -u ${LOCK_FILE}
