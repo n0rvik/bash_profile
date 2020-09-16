@@ -11,10 +11,19 @@
 LOCK_FILE=/var/run/aide.lock
 MAIL_ADDR=root@localhost
 
-dotlockfile -p ${LOCK_FILE} || exit 1
+dotlockfile -p ${LOCK_FILE}
+if [ $? -ne 0 ]; then
+  echo "Can't lock file."
+  exit 1
+fi
 
 TMP=$(mktemp -t aide.XXXXXX)
-trap "rm $TMP* 2>/dev/null" 0
+if [ $? -ne 0 ]; then
+  echo "Can't create tmp file."
+  exit 1
+fi
+
+trap "rm ${TMP} 2>/dev/null" 0
 
 aide --update > ${TMP} 2>&1
 ret=$?
@@ -23,13 +32,13 @@ if [ ${ret} -eq 0 ]; then
   cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 elif [ ${ret} -lt 8 ]; then
   # Some file is changed.
-  cat ${TMP} | mail -s "AIDE detects changes on ${HOSTNAME}" ${MAIL_ADDR}
+  cat ${TMP} | mail -s "AIDE detects changes. Host: ${HOSTNAME}" ${MAIL_ADDR}
   cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 else
   # Cannot update database.
-  cat ${TMP} | mail -s "AIDE fatal error on ${HOSTNAME}" ${MAIL_ADDR}
+  cat ${TMP} | mail -s "AIDE fatal error. Host: ${HOSTNAME}" ${MAIL_ADDR}
 fi
 
 dotlockfile -u ${LOCK_FILE}
 
-
+exit 0
