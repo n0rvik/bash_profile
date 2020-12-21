@@ -5,25 +5,26 @@
 
 # User specific aliases and functions
 
-# alias rm='rm -i'
-# alias cp='cp -i'
-# alias mv='mv -i'
-
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
+DIR_COLORS=
+if [ -e "$HOME/.dir_colors" ]; then
+   DIR_COLORS="$HOME/.dir_colors"
+else
+   case $TERM in
+     xterm-256color)
+         DIR_COLORS=/etc/DIR_COLORS.256color
+         ;;
+     xterm*)
+         DIR_COLORS=/etc/DIR_COLORS
+         ;;
+   esac
 fi
+eval "`dircolors -b ${DIR_COLORS}`"
 
-# User Aliases
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+export LS_OPTIONS='--color=auto'
 
-# default path
-# user
-# PATH=/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin
-# root
-# PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+alias ls='ls $LS_OPTIONS'
+alias ll='ls $LS_OPTIONS -l'
+alias l='ls $LS_OPTIONS -lA'
 
 pathmunge () {
     case ":${PATH}:" in
@@ -39,6 +40,16 @@ pathmunge () {
 }
 
 
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User Aliases
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+
 if [ -d "$HOME/bin" ] ; then
     pathmunge "$HOME/bin"
 fi
@@ -47,9 +58,6 @@ if [ -d "$HOME/.local/bin" ] ; then
     pathmunge "$HOME/.local/bin"
 fi
 
-# modern path
-# PATH=$HOME/.local/bin:$HOME/bin:$PATH
+export PATH
 
 unset -f pathmunge
-
-export PATH
