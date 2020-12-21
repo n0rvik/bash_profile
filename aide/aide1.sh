@@ -9,13 +9,12 @@
 # chmod 755 /etc/cron.daily/aide
 
 LOCK_FILE=/var/run/aide.lock
-MAIL_ADDR=root@localhost
+MAIL_ADDR=root@${HOSTNAME}
+AIDE=$(which aide)
+NICE=$(which nice)
+RM=$(which rm)
 
-dotlockfile -p ${LOCK_FILE}
-if [ $? -ne 0 ]; then
-  echo "Can't lock file."
-  exit 1
-fi
+dotlockfile -p ${LOCK_FILE} || exit 1
 
 TMP=$(mktemp -t aide.XXXXXX)
 if [ $? -ne 0 ]; then
@@ -23,9 +22,9 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 
-trap "rm ${TMP} 2>/dev/null" 0
+trap "${RM} ${TMP} 2>/dev/null" 0
 
-aide --update > ${TMP} 2>&1
+${NICE} -n 19 ${AIDE} --update >${TMP} 2>&1
 ret=$?
 if [ ${ret} -eq 0 ]; then
   # Nothing is changed.
@@ -41,4 +40,4 @@ fi
 
 dotlockfile -u ${LOCK_FILE}
 
-exit 0
+
