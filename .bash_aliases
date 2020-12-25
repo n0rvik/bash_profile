@@ -435,6 +435,7 @@ export LESS_TERMCAP_ue=$'\E[0m'        # reset underline
 export GROFF_NO_SGR=1                  # for konsole and gnome-terminal
 
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+export GREP_COLORS='ms=01;42;93:mc=01;42:sl=:cx=:fn=01;35:ln=32:bn=32:se=36'
 
 # Отображение списка соответствующих файлов
 bind 'set show-all-if-ambiguous On'
