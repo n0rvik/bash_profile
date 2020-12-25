@@ -34,6 +34,30 @@ export HISTTIMEFORMAT="%d/%h/%y - %H:%M:%S "
 # export HISTTIMEFORMAT='%h %d %H:%M:%S '
 # export HISTTIMEFORMAT="%d/%m/%y %T %t"
 
+function pathmunge() {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            if [ "$2" = "after" ] ; then
+                PATH=$PATH:$1
+            else
+                PATH=$1:$PATH
+            fi
+    esac
+}
+
+if [ -d "$HOME/bin" ] ; then
+    pathmunge "$HOME/bin"
+fi
+
+if [ -d "$HOME/.local/bin" ] ; then
+    pathmunge "$HOME/.local/bin"
+fi
+
+export PATH
+
+unset -f pathmunge
 
 # Скопировать файл в файл с расширением ${file}-2020-03-19-130430.bak
 function t0bak() {
@@ -43,17 +67,7 @@ function t0bak() {
   fi
 }
 
-# function to set terminal title  
-function set-title() {
-  if [[ -z "$ORIG" ]]; then
-    ORIG=$PS1
-  fi
-  TITLE="\[\e[2;$*\a\]"
-  PS1=${ORIG}${TITLE}
-}
-
-
-# Архивация папки в которой запущена программа в 
+# Архивация папки в которой запущена программа в
 # папку $HOME/backup/<name_cur_folder>
 function __tar_backup()
 {
@@ -63,7 +77,7 @@ function __tar_backup()
      local dest_dir="${HOME}/backup/${source_dir}"
      local name_arch="${dest_dir}/${source_dir}_${__date}.tar.gz"
      local recreatesnar=""
-     
+
      if [ ! -d "$dest_dir" ]; then
          /usr/bin/mkdir -vp "$dest_dir"
      else
@@ -75,132 +89,17 @@ function __tar_backup()
      fi
 
      echo -e "\n\033[0;33mStart backup ${full_path}\033[0m"
-     
+
      /usr/bin/tar --create --gzip --verbose --dereference \
                   --file="${name_arch}" \
                   --exclude "${dest_dir}/*" \
                  "."
-     
+
      if [ "$?" -eq "0" ]; then
          echo -e "\n\033[0;33mFinish backup ${full_path} -> ${name_arch}\033[0m"
      else
          echo -e "\n\033[0;31mError create backup ${full_path}\033[0m"
      fi
-     
-}
-
-
-
-# Архивация папки в которой запущена программа в инкрементный архив в
-# папку $HOME/backup/<name_cur_folder>
-# Создает файл архива, файл snar.
-# Если папка архива существует, предложит пересоздать архив.
-function __tar_backup00()
-{
-     local __date=`/usr/bin/date +%Y-%m-%d-%H%M%S`
-     local full_path=`/usr/bin/pwd`
-     local source_dir=`/usr/bin/pwd | /usr/bin/sed -e 's,^\(.*/\)\?\([^/]*\),\2,'`
-     local dest_dir="${HOME}/backup/${source_dir}"
-     local name_arch="${dest_dir}/${source_dir}_${__date}.tar.gz"
-     local name_snar="${dest_dir}/${source_dir}.snar"
-     local recreatesnar=""
-     
-     if [ ! -d "$dest_dir" ]; then
-         /usr/bin/mkdir -vp "$dest_dir"
-     else
-        echo -e "\033[0;31mArchive folder exist -> ${dest_dir}, re-create snar file? (y\N) \033[0m"
-        read recreatesnar
-        if [[ "$recreatesnar" =~ ^(y|yes|Y)$ ]]; then
-            /usr/bin/find ${dest_dir} -type f \( -name "${source_dir}_*.tar.gz" -o -name "${source_dir}.snar" \) -exec /usr/bin/rm -i {} \;
-        fi
-     fi
-
-     echo -e "\n\033[0;33mStart backup ${full_path}\033[0m"
-     
-     /usr/bin/tar --create --gzip --verbose --dereference \
-                  --file="${name_arch}" \
-                  --listed-incremental="${name_snar}" \
-                  --exclude "${dest_dir}/*" \
-                 "."
-     
-     if [ "$?" -eq "0" ]; then
-         echo -e "\n\033[0;33mFinish backup ${full_path} -> ${name_arch}\033[0m"
-     else
-         echo -e "\n\033[0;31mError create backup ${full_path}\033[0m"
-     fi
-     
-}
-
-# Архивация папки в которой запущена программа в инкрементный архив в
-# папку $HOME/backup/<name_cur_folder>
-# Создает файл архива, используя существующий файл snar.
-function __tar_backup01()
-{
-     local __date=`/usr/bin/date +%Y-%m-%d-%H%M%S`
-     local full_path=`/usr/bin/pwd`
-     local source_dir=`/usr/bin/pwd | /usr/bin/sed -e 's,^\(.*/\)\?\([^/]*\),\2,'`
-     local dest_dir="${HOME}/backup/${source_dir}"
-     local name_arch="${dest_dir}/${source_dir}_${__date}.tar.gz"
-     local name_snar="${dest_dir}/${source_dir}.snar"
-     
-     [ ! -d "$dest_dir" ] && /usr/bin/mkdir -vp "$dest_dir"
-     
-     echo -e "\n\033[0;33mStart backup ${full_path}\033[0m"
-     
-     /usr/bin/tar --create --gzip --verbose --dereference \
-                  --file="${name_arch}" \
-                  --listed-incremental="${name_snar}" \
-                  --exclude "${dest_dir}/*" \
-                 "."
-     
-     if [ "$?" -eq "0" ]; then
-         echo -e "\n\033[0;33mFinish backup ${full_path} -> ${name_arch}\033[0m"
-     else
-         echo -e "\n\033[0;31mError create backup ${full_path}\033[0m"
-     fi
-     
-}
-
-# Инкрементый архивация папки в которой запущена программа в 
-# папку $HOME/backup/<name_cur_folder>
-function __rsync_backup00()
-{
-
-    # Копируем из текущей папки все в /root/$1/backup
-    # В папке /root/$1/backup/current лежат последние измененные файлы
-    # В папке /root/$1/backup/increment лежат старые измененные файлы
-
-    local __date=`/usr/bin/date +%Y-%m-%d-%H%M%S`
-
-    # Ресурс на сервере для бэкапа
-    local full_path=`/usr/bin/pwd`
-    local source_dir=`/usr/bin/pwd | /usr/bin/sed -e 's,^\(.*/\)\?\([^/]*\),\2,'`
-
-    # Папка, куда будем складывать архивы
-    local dest_dir="${HOME}/backup"
-    local syst_dir="${dest_dir}/${source_dir}"
-
-    echo -e "\n\033[0;33mStart backup ${full_path}\033[0m"
-
-    # Создаем папку для инкрементных бэкапов
-    [ ! -d "${syst_dir}/increment/" ] & /usr/bin/mkdir -vp "${syst_dir}/increment/"
-
-    # Запускаем непосредственно бэкап с параметрами
-    /usr/bin/rsync -a --progress --exclude "${dest_dir}" \
-    --stats --human-readable --delete \
-    --backup --backup-dir="${syst_dir}/increment/${__date}/" \
-    "${full_path}" \
-    "${syst_dir}/current/"
-
-    # Чистим папки с инкрементными архивами старше 7-ти дней
-
-    #/usr/bin/find ${syst_dir}/increment/ -maxdepth 1 -type d -mtime +7 -exec rm -rf {} \;
-
-    if [ "$?" -eq "0" ]; then
-        echo -e "\n\033[0;33mFinish backup ${full_path} -> ${syst_dir}/current/\033[0m"
-    else
-        echo -e "\n\033[0;31mError create backup ${full_path}\033[0m"
-    fi
 
 }
 
@@ -219,7 +118,7 @@ my_mc() {
 # Defaulst PS1
 # PS1="[\u@\h \W]\\$ "
 # PS1="[\u@\h:\l \W]\\$ "
-                                                          	
+
 myprompt() {
     # Сброс
     local Color_Off='\[\e[m\]'       # Text Reset
@@ -233,7 +132,7 @@ myprompt() {
     local Purple='\[\e[0;35m\]'       # Purple
     local Cyan='\[\e[0;36m\]'         # Cyan
     local White='\[\e[0;37m\]'        # White
-     
+
     # Жирные
     local BBlack='\[\e[1;30m\]'       # Black
     local BRed='\[\e[1;31m\]'         # Red
@@ -243,7 +142,7 @@ myprompt() {
     local BPurple='\[\e[1;35m\]'      # Purple
     local BCyan='\[\e[1;36m\]'        # Cyan
     local BWhite='\[\e[1;37m\]'       # White
-     
+
     # Подчёркнутые
     local UBlack='\[\e[4;30m\]'       # Black
     local URed='\[\e[4;31m\]'         # Red
@@ -253,7 +152,7 @@ myprompt() {
     local UPurple='\[\e[4;35m\]'      # Purple
     local UCyan='\[\e[4;36m\]'        # Cyan
     local UWhite='\[\e[4;37m\]'       # White
-     
+
     # Фоновые
     local On_Black='\[\e[40m\]'       # Black
     local On_Red='\[\e[41m\]'         # Red
@@ -263,7 +162,7 @@ myprompt() {
     local On_Purple='\[\e[45m\]'      # Purple
     local On_Cyan='\[\e[46m\]'        # Cyan
     local On_White='\[\e[47m\]'       # White
-     
+
     # Высоко Интенсивные
     local IBlack='\[\e[0;90m\]'       # Black
     local IRed='\[\e[0;91m\]'         # Red
@@ -273,7 +172,7 @@ myprompt() {
     local IPurple='\[\e[0;95m\]'      # Purple
     local ICyan='\[\e[0;96m\]'        # Cyan
     local IWhite='\[\e[0;97m\]'       # White
-     
+
     # Жирные Высоко Интенсивные
     local BIBlack='\[\e[1;90m\]'      # Black
     local BIRed='\[\e[1;91m\]'        # Red
@@ -283,7 +182,7 @@ myprompt() {
     local BIPurple='\[\e[1;95m\]'     # Purple
     local BICyan='\[\e[1;96m\]'       # Cyan
     local BIWhite='\[\e[1;97m\]'      # White
-     
+
     # Высоко Интенсивные фоновые
     local On_IBlack='\[\e[0;100m\]'   # Black
     local On_IRed='\[\e[0;101m\]'     # Red
@@ -295,13 +194,13 @@ myprompt() {
     local On_IWhite='\[\e[0;107m\]'   # White
 
     local revert=0
-     
-    if [[ "$1" == "1" ]]; then
+
+    if [[ "$1" = "1" ]]; then
     	revert=1
     fi
 
-    history -a 
-    history -c 
+    history -a
+    history -c
     history -r
 
     local EMOJ=
@@ -313,7 +212,7 @@ myprompt() {
 
             PS1="${Color_Off}"
             PS1+="["
-            
+
             if [ -n "$EMOJ" ]; then
                 PS1+="${Yellow}${EMOJ} "
                 PS1+="${Color_Off}"
@@ -323,12 +222,12 @@ myprompt() {
                 PS1+="${BYellow}mc "
                 PS1+="${Color_Off}"
             fi
-            
+
             if [[ ${revert} -eq 1 ]]; then
             	PS1+="${URed}${BRed}\\u${Color_Off}${BRed}@\\h"
             	PS1+="${Color_Off} "
             fi
-            
+
             PS1+="${BIBlue}\\D{%m/%d}"
             PS1+=" "
             PS1+="${BIBlue}\\A"
@@ -341,9 +240,9 @@ myprompt() {
             PS1+="${Color_Off}"
             PS1+="]\\n"
             PS1+="["
-            
+
             if [[ ${revert} -eq 1 ]]; then
-            	PS1+="${Yellow}\\w"
+            	PS1+="${Yellow}\\W"
             	PS1+="${Color_Off}"
             	PS1+="]"
             	PS1+="${Red}\\\$ "
@@ -353,7 +252,7 @@ myprompt() {
                 PS1+="${Color_Off}"
                 PS1+="${BRed}@\\h"
                 PS1+="${Color_Off} "
-                PS1+="${Yellow}\\w"
+                PS1+="${Yellow}\\W"
                 PS1+="${Color_Off}"
                 PS1+="]"
                 PS1+="${Red}\\\$ "
@@ -361,7 +260,7 @@ myprompt() {
             fi
 
         else
-            
+
             PS1="${Color_Off}"
             PS1+="["
 
@@ -392,9 +291,9 @@ myprompt() {
             PS1+="${Color_Off}"
             PS1+="]\\n"
             PS1+="["
-            
+
             if [[ ${revert} -eq 1 ]]; then
-            	PS1+="${Yellow}\\w"
+            	PS1+="${Yellow}\\W"
             	PS1+="${Color_Off}"
             	PS1+="]"
             	PS1+="${BGreen}\\\$ "
@@ -404,7 +303,7 @@ myprompt() {
                 PS1+="${Color_Off}"
                 PS1+="${BGreen}@\\h"
                 PS1+="${Color_Off} "
-                PS1+="${Yellow}\\w"
+                PS1+="${Yellow}\\W"
                 PS1+="${Color_Off}"
                 PS1+="]"
                 PS1+="${Green}\\\$ "
@@ -414,10 +313,18 @@ myprompt() {
         fi
 
     else
-        PS1="${Color_Off}$(my_mc)[\\u@\\h \\w]\\\$ "
+        PS1="${Color_Off}$(my_mc)[\\u@\\h \\W]\\\$ "
     fi
     export PS1
-    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+
+    case $TERM in
+      xterm*|vte*) 
+        printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+        ;;
+      screen*)
+        printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
+        ;;
+     esac
 }
 
 # ############
@@ -425,6 +332,9 @@ myprompt() {
 # ############
 
 
+# ############
+# myprompt2
+# ############
 myprompt2 () {
     # Сброс
     local Color_Off='\[\e[m\]'       # Text Reset
@@ -463,9 +373,23 @@ myprompt2 () {
         PS1="${Color_Off}$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
     fi
     export PS1
-    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+
+    case $TERM in
+      xterm*|vte*) 
+        printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+        ;;
+      screen*)
+        printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
+        ;;
+     esac
 }
 
+# ############
+# myprompt2
+# ############
+
+
+# Замена prompt
 revert_prompt() {
     if [[ "$1" == 1 ]]; then
         PROMPT_COMMAND='myprompt 1'
@@ -476,7 +400,6 @@ revert_prompt() {
     fi
     export PROMPT_COMMAND
 }
-
 
 # prompt = '# _' | '$ _'
 easy_prompt() {
@@ -490,14 +413,6 @@ easy_prompt() {
     export PS1
 }
 
-_999_fmt_err() {
-    ret=$?
-    if [[ "${ret}" -ne "0" ]]; then
-        echo -e "[\e[0;33m${ret}\e[m]"
-    else
-        echo ""
-    fi
-}
 
 if [ -x /usr/bin/mcedit ]; then
     export EDITOR=/usr/bin/mcedit
@@ -525,7 +440,7 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 bind 'set show-all-if-ambiguous On'
 # Если есть несколько совпадений для завершения, Tab должен циклически перебирать их
 bind 'TAB:menu-complete'
-# Выполните частичное завершение на первом нажатии вкладки, 
+# Выполните частичное завершение на первом нажатии вкладки,
 # только начните циклировать полные результаты на втором нажатии вкладки
 bind 'set menu-complete-display-prefix on'
 bind 'set completion-ignore-case On'
@@ -535,42 +450,52 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
-# add optional items to the path
-# for bindir in $HOME/bin $HOME/.local/bin; do
-#     if [ -d $bindir ]; then
-#         PATH=${bindir}:$PATH
-#     fi
-# done
+# ######
+# COLORS
+# ######
+COLORS=
+LS_OPTIONS=
 
-# PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:$HOME/.local/bin:$HOME/bin
-# export PATH
+for colors in "$HOME/.dir_colors" "$HOME/.dircolors"; do
+  [ -e "$colors" ] && COLORS="$colors"
+done
 
-if type -P dircolors &>/dev/null ; then
-    if [[ -f ~/.dir_colors ]] ; then
-        eval $(dircolors -b ~/.dir_colors)
-    elif [[ -f /etc/DIR_COLORS.256color ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS.256color)
-    elif [[ -f /etc/DIR_COLORS ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS)
-    fi
+[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS.256color" ] && \
+[ "x`/usr/bin/tty -s && /usr/bin/tput colors 2>/dev/null`" = "x256" ] && \
+COLORS="/etc/DIR_COLORS.256color"
+
+[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS" ] && \
+COLORS="/etc/DIR_COLORS"
+
+if [ -n "$COLORS" ]; then
+  eval "`/usr/bin/dircolors --sh $COLORS 2>/dev/null`"
+  export LS_OPTIONS='--color=auto'
+  
+  alias grep='/usr/bin/grep --color=auto'
+  alias fgrep='/usr/bin/grep --color=auto'
+  alias egrep='/usr/bin/grep --color=auto'
+
 fi
 
-export LS_OPTIONS='--color=auto'
+unset COLORS colors
+# ######
+# COLORS
+# ######
 
-alias og='/usr/bin/ls $LS_OPTIONS -ogrt' 2>/dev/null
-alias ls='/usr/bin/ls $LS_OPTIONS' 2>/dev/null
-alias ll='/usr/bin/ls $LS_OPTIONS -l' 2>/dev/null
-alias lld='/usr/bin/ls $LS_OPTIONS -ld' 2>/dev/null
-alias lla='/usr/bin/ls $LS_OPTIONS -lA' 2>/dev/null
-alias llh='/usr/bin/ls $LS_OPTIONS -lah --time-style=+%F\ %H:%M' 2>/dev/null
-alias llt='/usr/bin/ls $LS_OPTIONS -lah --sort=time' 2>/dev/null
-alias llr='/usr/bin/ls $LS_OPTIONS -lah --sort=time --revers' 2>/dev/null
-alias la='/usr/bin/ls $LS_OPTIONS -A' 2>/dev/null
-alias lt='/usr/bin/ls $LS_OPTIONS -ltr' 2>/dev/null
-alias l='/usr/bin/ls $LS_OPTIONS -CF' 2>/dev/null
-alias l.='/usr/bin/ls -d .* $LS_OPTIONS' 2>/dev/null
-alias lsl='/usr/bin/ls -lhFA | less'
-alias lsdate='/usr/bin/ls $LS_OPTIONS -l --time-style="+%d-%m-%Y"' 2>/dev/null
+alias og="/usr/bin/ls $LS_OPTIONS -ogrt" 2>/dev/null
+alias ls="/usr/bin/ls $LS_OPTIONS" 2>/dev/null
+alias ll="/usr/bin/ls $LS_OPTIONS -l" 2>/dev/null
+alias lld="/usr/bin/ls $LS_OPTIONS -ld" 2>/dev/null
+alias lla="/usr/bin/ls $LS_OPTIONS -lA" 2>/dev/null
+alias llh="/usr/bin/ls $LS_OPTIONS -lah --time-style=+%F\\ %H:%M" 2>/dev/null
+alias llt="/usr/bin/ls $LS_OPTIONS -lah --sort=time" 2>/dev/null
+alias llr="/usr/bin/ls $LS_OPTIONS -lah --sort=time --revers" 2>/dev/null
+alias la="/usr/bin/ls $LS_OPTIONS -A" 2>/dev/null
+alias lt="/usr/bin/ls $LS_OPTIONS -ltr" 2>/dev/null
+alias l="/usr/bin/ls $LS_OPTIONS -CF" 2>/dev/null
+alias l.="/usr/bin/ls -d .* $LS_OPTIONS" 2>/dev/null
+alias lsl="/usr/bin/ls -lhFA | less"
+alias lsdate="/usr/bin/ls $LS_OPTIONS -l --time-style='+%d-%m-%Y'" 2>/dev/null
 
 alias ffile='/usr/bin/find . -type f -name '
 alias fhere='/usr/bin/find . -name '
@@ -620,10 +545,6 @@ alias cpuinfo='/usr/bin/lscpu'
 ## get GPU ram on desktop / laptop##
 alias gpumeminfo='/usr/bin/grep -i --color memory /var/log/Xorg.0.log'
 
-alias grep='/usr/bin/grep --color=auto'
-alias fgrep='/usr/bin/grep --color=auto'
-alias egrep='/usr/bin/grep --color=auto'
-
 alias h='history 10'
 alias mc='. /usr/libexec/mc/mc-wrapper.sh'
 
@@ -660,14 +581,6 @@ if type colordiff &>/dev/null ; then
     alias diff=`type -p colordiff`
 fi
 
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-
 PROMPT_COMMAND=myprompt
 export PROMPT_COMMAND
 
@@ -679,4 +592,3 @@ if type cowsay &>/dev/null; then
         echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | cowsay
     fi
 fi
-
