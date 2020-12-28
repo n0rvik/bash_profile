@@ -318,7 +318,7 @@ myprompt() {
     export PS1
 
     case $TERM in
-      xterm*|vte*) 
+      xterm*|vte*)
         printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
         ;;
       screen*)
@@ -348,7 +348,7 @@ myprompt2 () {
     local Purple='\[\e[0;35m\]'       # Purple
     local Cyan='\[\e[0;36m\]'         # Cyan
     local White='\[\e[0;37m\]'        # White
-     
+
     # Жирные
     local BBlack='\[\e[1;30m\]'       # Black
     local BRed='\[\e[1;31m\]'         # Red
@@ -375,7 +375,7 @@ myprompt2 () {
     export PS1
 
     case $TERM in
-      xterm*|vte*) 
+      xterm*|vte*)
         printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
         ;;
       screen*)
@@ -471,7 +471,7 @@ COLORS="/etc/DIR_COLORS"
 if [ -n "$COLORS" ]; then
   eval "`/usr/bin/dircolors --sh $COLORS 2>/dev/null`"
   export LS_OPTIONS='--color=auto'
-  
+
   alias grep='/usr/bin/grep --color=auto'
   alias fgrep='/usr/bin/grep --color=auto'
   alias egrep='/usr/bin/grep --color=auto'
@@ -582,8 +582,11 @@ if type colordiff &>/dev/null ; then
     alias diff=`type -p colordiff`
 fi
 
-PROMPT_COMMAND=myprompt
-export PROMPT_COMMAND
+if [ -r /etc/profile.d/bash_completion.sh ]; then
+    . /etc/profile.d/bash_completion.sh
+fi
+
+export PROMPT_COMMAND=myprompt
 
 if type cowsay &>/dev/null; then
     if type fortune &>/dev/null; then
