@@ -230,6 +230,7 @@ myprompt() {
                 PS1+="${BIYellow}-- "
                 PS1+="${BIPurple}${PROM_MSG}"
                 PS1+="${BIYellow} --"
+                PS1+="${Color_Off}"
                 PS1+=" ]\\n"
             fi
 
@@ -292,6 +293,7 @@ myprompt() {
                 PS1+="${BIYellow}-- "
                 PS1+="${BIPurple}${PROM_MSG}"
                 PS1+="${BIYellow} --"
+                PS1+="${Color_Off}"
                 PS1+=" ]\\n"
             fi
 
