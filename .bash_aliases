@@ -106,13 +106,6 @@ function __tar_backup()
 
 }
 
-my_prom() {
-    if [ -n "${PROM_MSG-}" ]; then
-        echo "-- ${PROM_MSG} --\\n"
-    fi
-    echo ''
-}
-
 # Проверяет запуск subshell из-под mc
 # И возвращает строку "mc:"
 my_mc() {
@@ -349,7 +342,11 @@ myprompt() {
         fi
 
     else
-        PS1="${Color_Off}$(my_mc)[\\u@\\h \\W]\\\$ "
+        PS1="${Color_Off}
+        if [ -n "${PROM_MSG-}" ]; then
+            PS1+="[ -- {PROM_MSG} -- ]\\n"
+        fi
+        PS1+="$(my_mc)[\\u@\\h \\W]\\\$ "
     fi
     export PS1
 
@@ -395,18 +392,28 @@ myprompt2 () {
     local BCyan='\[\e[1;36m\]'        # Cyan
     local BWhite='\[\e[1;37m\]'       # White
 
+    local my_prom=
+
     history -a
     history -c
     history -r
 
     if [[ ${CLICOLOR} -eq 1 ]]; then
+        PS1="${Color_Off}
+        if [ -n "${PROM_MSG-}" ]; then
+            PS1+="[ -- ${BPurple}${PROM_MSG}${Color_Off} -- ]\\n"
+        fi
         if [[ $(/usr/bin/id -u) -eq 0 ]]; then
-            PS1="${Color_Off}$(my_prom)$(my_mc)[${BRed}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BRed}\\\$ ${Color_Off}"
+            PS1+="$(my_mc)[${BRed}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BRed}\\\$ ${Color_Off}"
         else
-            PS1="${Color_Off}$(my_prom)$(my_mc)[${BGreen}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BGreen}\\\$ ${Color_Off}"
+            PS1+="$(my_mc)[${BGreen}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BGreen}\\\$ ${Color_Off}"
         fi
     else
-        PS1="${Color_Off}$(my_prom)$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
+        PS1="${Color_Off}
+        if [ -n "${PROM_MSG-}" ]; then
+            PS1+="[ -- ${PROM_MSG} -- ]\\n"
+        fi
+        PS1+="$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
     fi
     export PS1
 
