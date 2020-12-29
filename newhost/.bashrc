@@ -7,15 +7,30 @@ fi
 
 # User specific environment
 
+function pathmunge() {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            if [ "$2" = "after" ] ; then
+                PATH=$PATH:$1
+            else
+                PATH=$1:$PATH
+            fi
+    esac
+}
+
 if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+    pathmunge "$HOME/bin"
 fi
 
 if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
+    pathmunge "$HOME/.local/bin"
 fi
 
 export PATH
+
+unset -f pathmunge
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
@@ -48,15 +63,31 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
-if type -P dircolors &>/dev/null ; then
-    if [[ -f ~/.dir_colors ]] ; then
-        eval $(dircolors -b ~/.dir_colors)
-    elif [[ -f /etc/DIR_COLORS.256color ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS.256color)
-    elif [[ -f /etc/DIR_COLORS ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS)
-    fi
+COLORS=
+LS_OPTIONS=
+
+for colors in "$HOME/.dir_colors" "$HOME/.dircolors"; do
+  [ -e "$colors" ] && COLORS="$colors"
+done
+
+[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS.256color" ] && \
+[ "x`/usr/bin/tty -s && /usr/bin/tput colors 2>/dev/null`" = "x256" ] && \
+COLORS="/etc/DIR_COLORS.256color"
+
+[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS" ] && \
+COLORS="/etc/DIR_COLORS"
+
+if [ -n "$COLORS" ]; then
+  eval "`/usr/bin/dircolors --sh $COLORS 2>/dev/null`"
+  export LS_OPTIONS='--color=auto'
+
+  alias grep='/usr/bin/grep --color=auto'
+  alias fgrep='/usr/bin/grep --color=auto'
+  alias egrep='/usr/bin/grep --color=auto'
+
 fi
+
+unset COLORS colors
 
 export LS_OPTIONS='--color=auto'
 
@@ -75,10 +106,6 @@ alias l.='/usr/bin/ls -d .* $LS_OPTIONS' 2>/dev/null
 alias lsl='/usr/bin/ls -lhFA | less'
 alias lsdate='/usr/bin/ls $LS_OPTIONS -l --time-style="+%d-%m-%Y"' 2>/dev/null
 
-alias grep='/usr/bin/grep --color=auto'
-alias fgrep='/usr/bin/grep --color=auto'
-alias egrep='/usr/bin/grep --color=auto'
-
 alias h='history 10'
 
 if type vim &>/dev/null; then
@@ -89,12 +116,22 @@ fi
 # PS1="[\u@\h \W]\\$ "
 # PS1="[\u@\h:\l \W]\\$ "
 
-PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+case $TERM in
+  xterm*|vte*)
+    PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+    ;;
+  screen*)
+    PROMPT_COMMAND='history -a;printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    ;;
+esac
+export PROMPT_COMMAND
+
 if [ "$(id -u)" == "0" ]; then
     PS1='[\[\033[01;31m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;31m\]\$\[\033[00m\] '
 else
     PS1='[\[\033[01;32m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;32m\]\$\[\033[00m\] '
 fi
+export PS1
 
 COWSAY=`/usr/bin/which cowsay 2>/dev/null`
 if [ -n "$COWSAY" ]; then
@@ -102,4 +139,5 @@ if [ -n "$COWSAY" ]; then
 else
     echo -e "\nHi, people! Today is $(/usr/bin/date +'%A %d %B %Y')\n\n"
 fi
+unset COWSAY
 
