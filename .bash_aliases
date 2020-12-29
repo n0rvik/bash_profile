@@ -108,7 +108,7 @@ function __tar_backup()
 
 my_prom() {
     if [ -n "${PROM_MSG-}" ]; then
-        echo -n "-- ${PROM_MSG} --\n"
+        echo "-- ${PROM_MSG} --\\n"
     fi
     echo ''
 }
@@ -222,7 +222,17 @@ myprompt() {
     if [[ ${CLICOLOR} -eq 1 ]]; then
         if [[ $(/usr/bin/id -u) -eq 0 ]]; then
             # Мы root
+
             PS1="${Color_Off}"
+
+            if [ -n "${PROM_MSG-}" ]; then
+                PS1+="[ "
+                PS1+="${BIYellow}-- "
+                PS1+="${BIPurple}${PROM_MSG}"
+                PS1+="${BIYellow} --"
+                PS1+=" ]\\n"
+            fi
+
             PS1+="["
 
             if [ -n "$EMOJ" ]; then
@@ -250,14 +260,6 @@ myprompt() {
             PS1+=" "
             PS1+="${BIBlue}tty:$(/usr/bin/tty | /usr/bin/cut -d/ -f4)"
 
-            if [ -n "${PROM_MSG-}" ]; then
-                PS1+=" "
-                PS1+="${BIYellow}-- "
-                PS1+="${BIPurple}${PROM_MSG}"
-                PS1+="${BIYellow} --"
-                PS1+=" "
-            fi
-
             PS1+="${Color_Off}"
             PS1+="]\\n"
             PS1+="["
@@ -282,7 +284,17 @@ myprompt() {
 
         else
             # Мы user
+
             PS1="${Color_Off}"
+
+            if [ -n "${PROM_MSG-}" ]; then
+                PS1+="[ "
+                PS1+="${BIYellow}-- "
+                PS1+="${BIPurple}${PROM_MSG}"
+                PS1+="${BIYellow} --"
+                PS1+=" ]\\n"
+            fi
+
             PS1+="["
 
             if [ -n "$EMOJ" ]; then
@@ -309,14 +321,6 @@ myprompt() {
             PS1+="${BIBlue}w:$(/usr/bin/who | /usr/bin/wc -l)"
             PS1+=" "
             PS1+="${BIBlue}tty:$(/usr/bin/tty | /usr/bin/cut -d/ -f4)"
-
-            if [ -n "${PROM_MSG-}" ]; then
-                PS1+=" "
-                PS1+="${BIYellow}-- "
-                PS1+="${BIPurple}${PROM_MSG}"
-                PS1+="${BIYellow} --"
-                PS1+=" "
-            fi
 
             PS1+="${Color_Off}"
             PS1+="]\\n"
