@@ -342,7 +342,7 @@ myprompt() {
         fi
 
     else
-        PS1="${Color_Off}
+        PS1="${Color_Off}"
         if [ -n "${PROM_MSG-}" ]; then
             PS1+="[ -- {PROM_MSG} -- ]\\n"
         fi
@@ -399,7 +399,7 @@ myprompt2 () {
     history -r
 
     if [[ ${CLICOLOR} -eq 1 ]]; then
-        PS1="${Color_Off}
+        PS1="${Color_Off}"
         if [ -n "${PROM_MSG-}" ]; then
             PS1+="[ -- ${BPurple}${PROM_MSG}${Color_Off} -- ]\\n"
         fi
@@ -409,7 +409,7 @@ myprompt2 () {
             PS1+="$(my_mc)[${BGreen}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BGreen}\\\$ ${Color_Off}"
         fi
     else
-        PS1="${Color_Off}
+        PS1="${Color_Off}"
         if [ -n "${PROM_MSG-}" ]; then
             PS1+="[ -- ${PROM_MSG} -- ]\\n"
         fi
