@@ -481,13 +481,13 @@ export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quo
 export GREP_COLORS='ms=01;42;93:mc=01;42:sl=:cx=:fn=01;35:ln=32:bn=32:se=36'
 
 # Отображение списка соответствующих файлов
-bind 'set show-all-if-ambiguous On'
+bind 'set show-all-if-ambiguous on'
 # Если есть несколько совпадений для завершения, Tab должен циклически перебирать их
 bind 'TAB:menu-complete'
 # Выполните частичное завершение на первом нажатии вкладки,
 # только начните циклировать полные результаты на втором нажатии вкладки
 bind 'set menu-complete-display-prefix on'
-bind 'set completion-ignore-case On'
+bind 'set completion-ignore-case on'
 
 bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
