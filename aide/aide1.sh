@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # FILE: /etc/cron.daily/aide
 # INSTALL: yum install aide mailx liblockfile postfix mutt
@@ -7,6 +7,8 @@
 # cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
 # cp aide1.sh /etc/cron.daily/aide
 # chmod 755 /etc/cron.daily/aide
+
+set -u
 
 LOCK_FILE=/var/run/aide.lock
 MAIL_ADDR=root@${HOSTNAME}
