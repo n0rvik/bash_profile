@@ -6,6 +6,9 @@ case $- in
       *) return;;
 esac
 
+# Сообщение в строке prompt
+PROM_MSG=
+
 export TERM=xterm-256color
 export COLORTERM=truecolor
 export CLICOLOR=1
@@ -103,6 +106,15 @@ function __tar_backup()
 
 }
 
+my_prom() {
+    if [ -n "${PROM_MSG-}" ]; then
+        echo -n "-- ${PROM_MSG} --\n"
+    fi
+    echo ''
+}
+
+# Проверяет запуск subshell из-под mc
+# И возвращает строку "mc:"
 my_mc() {
     local _s=
     if ps $PPID |grep -q mc; then
@@ -209,7 +221,7 @@ myprompt() {
     fi
     if [[ ${CLICOLOR} -eq 1 ]]; then
         if [[ $(/usr/bin/id -u) -eq 0 ]]; then
-
+            # Мы root
             PS1="${Color_Off}"
             PS1+="["
 
@@ -237,6 +249,15 @@ myprompt() {
             PS1+="${BIBlue}w:$(/usr/bin/who | /usr/bin/wc -l)"
             PS1+=" "
             PS1+="${BIBlue}tty:$(/usr/bin/tty | /usr/bin/cut -d/ -f4)"
+
+            if [ -n "${PROM_MSG-}" ]; then
+                PS1+=" "
+                PS1+="${BIYellow}-- "
+                PS1+="${BIPurple}${PROM_MSG}"
+                PS1+="${BIYellow} --"
+                PS1+=" "
+            fi
+
             PS1+="${Color_Off}"
             PS1+="]\\n"
             PS1+="["
@@ -260,7 +281,7 @@ myprompt() {
             fi
 
         else
-
+            # Мы user
             PS1="${Color_Off}"
             PS1+="["
 
@@ -288,6 +309,15 @@ myprompt() {
             PS1+="${BIBlue}w:$(/usr/bin/who | /usr/bin/wc -l)"
             PS1+=" "
             PS1+="${BIBlue}tty:$(/usr/bin/tty | /usr/bin/cut -d/ -f4)"
+
+            if [ -n "${PROM_MSG-}" ]; then
+                PS1+=" "
+                PS1+="${BIYellow}-- "
+                PS1+="${BIPurple}${PROM_MSG}"
+                PS1+="${BIYellow} --"
+                PS1+=" "
+            fi
+
             PS1+="${Color_Off}"
             PS1+="]\\n"
             PS1+="["
@@ -365,12 +395,12 @@ myprompt2 () {
 
     if [[ ${CLICOLOR} -eq 1 ]]; then
         if [[ $(/usr/bin/id -u) -eq 0 ]]; then
-            PS1="${Color_Off}$(my_mc)[${BRed}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BRed}\\\$ ${Color_Off}"
+            PS1="${Color_Off}$(my_prom)$(my_mc)[${BRed}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BRed}\\\$ ${Color_Off}"
         else
-            PS1="${Color_Off}$(my_mc)[${BGreen}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BGreen}\\\$ ${Color_Off}"
+            PS1="${Color_Off}$(my_prom)$(my_mc)[${BGreen}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BGreen}\\\$ ${Color_Off}"
         fi
     else
-        PS1="${Color_Off}$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
+        PS1="${Color_Off}$(my_prom)$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
     fi
     export PS1
 
