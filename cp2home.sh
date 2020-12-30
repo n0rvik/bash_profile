@@ -6,43 +6,43 @@
 
 set -u
 
-_home=$HOME
-if [ ! "x$1" == "x" ]; then
-   if [ -d "/home/$1" ]; then
-     _home=/home/$1
+tmp_login=${1-}
+tmp_home=$HOME
+
+if [ ! "x$tmp_login" == "x" ]; then
+   if [ -d "/home/$tmp_login" ]; then
+     tmp_home=/home/$tmp_login
    else
      echo "Directory not exist. Stop."
      exit 1
    fi
 fi
 
-mkdir -vp $_home/.config/backup
-mkdir -vp $_home/.config/bashrc
-mkdir -vp $_home/.config/bashrc.d
+mkdir -vp $tmp_home/.config/backup
+mkdir -vp $tmp_home/.config/bashrc
+mkdir -vp $tmp_home/.config/bashrc.d
 
-if [ ! "x$1" == "x" ]; then
-  chown -Rv $1:$1 $_home/.config
+if [ ! "x$tmp_login" == "x" ]; then
+  chown -Rv $tmp_login:$tmp_login $tmp_home/.config
 fi
 
 sfile=(.bash_aliases .bash_profile .bashrc .bash_logout .dir_colors .inputrc)
 
 star=
 for i in ${sfile[*]} ; do
-  star="${star} $_home/${i}"
+  star="${star} $tmp_home/${i}"
 done
 
-/bin/tar -cvf $_home/.config/backup/.profile.`date +'%Y%m%d-%H%M%S'`.tar ${star}
-if [ ! "x$1" == "x" ]; then
-  chown -Rv $1:$1 $_home/.config/backup
+/bin/tar -cvf $tmp_home/.config/backup/.profile.`date +'%Y%m%d-%H%M%S'`.tar ${star}
+if [ ! "x$tmp_login" == "x" ]; then
+  chown -Rv $tmp_login:$tmp_login $tmp_home/.config/backup
 fi
 
 for i in ${sfile[*]} ; do
-  /bin/cp -v ./${i} $_home/${i}
-  if [ ! "x$1" == "x" ]; then
-    chown -v $1:$1 $_home/${i}
+  /bin/cp -v ./${i} $tmp_home/${i}
+  if [ ! "x$tmp_login" == "x" ]; then
+    chown -v $tmp_login:$tmp_login $tmp_home/${i}
   fi
 done
-
-
 
 exit 0
