@@ -633,9 +633,13 @@ export PROMPT_COMMAND=myprompt
 
 if type cowsay &>/dev/null; then
     if type fortune &>/dev/null; then
-        export FORTUNE_FILE=/usr/share/games/fortunes/fortunes
-        fortune | cowsay
+        if [ -f /usr/share/games/fortunes/fortunes ]
+            export FORTUNE_FILE=/usr/share/games/fortunes/fortunes
+            fortune | cowsay
+        else
+            echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | xargs cowsay
+        fi
     else
-        echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | cowsay
+        echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | xargs cowsay
     fi
 fi

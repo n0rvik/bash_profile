@@ -26,7 +26,7 @@ if [ ! "x$tmp_login" == "x" ]; then
   chown -Rv $tmp_login:$tmp_login $tmp_home/.config
 fi
 
-sfile=(.bash_aliases .bash_profile .bashrc .bash_logout .dir_colors .inputrc)
+sfile=(.bash_aliases .bash_profile .bashrc .bash_logout .dir_colors)
 
 star=
 for i in ${sfile[*]} ; do
