@@ -633,7 +633,7 @@ export PROMPT_COMMAND=myprompt
 
 if type cowsay &>/dev/null; then
     if type fortune &>/dev/null; then
-        if [ -f /usr/share/games/fortunes/fortunes ]
+        if [ -f /usr/share/games/fortunes/fortunes ]; then
             export FORTUNE_FILE=/usr/share/games/fortunes/fortunes
             fortune | cowsay
         else
