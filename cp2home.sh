@@ -19,11 +19,11 @@ mkdir -vp $_home/.config/bashrc.d
 
 sfile=(.bash_aliases .bash_profile .bashrc .bash_logout .dir_colors .inputrc)
 
-for i in ${sfile[*]}; do
-  if [ -f "$_home/${i}.orig"]; then
+for i in ${sfile[*]} ; do
+  if [ -f "$_home/${i}.orig" ]; then
     /bin/cp -v $_home/${i}.orig $_home/${i}.bak
   fi
-  if [ -f "$_home/${i}"]; then
+  if [ -f "$_home/${i}" ]; then
     /bin/cp -v $_home/${i} $_home/${i}.orig
   fi
   /bin/cp -v ./${i} $_home/${i}
