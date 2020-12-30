@@ -630,16 +630,3 @@ if [ -r /etc/profile.d/bash_completion.sh ]; then
 fi
 
 export PROMPT_COMMAND=myprompt
-
-if type cowsay &>/dev/null; then
-    if type fortune &>/dev/null; then
-        if [ -f /usr/share/games/fortunes/fortunes ]; then
-            export FORTUNE_FILE=/usr/share/games/fortunes/fortunes
-            fortune | cowsay
-        else
-            echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | xargs cowsay
-        fi
-    else
-        echo "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')" | xargs cowsay
-    fi
-fi
