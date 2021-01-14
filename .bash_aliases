@@ -7,7 +7,9 @@ case $- in
 esac
 
 # Сообщение в строке prompt
-PROM_MSG=
+export PROMPTMSG=
+export LONGPATH=0
+export EASYPROMPT=0
 
 export TERM=xterm-256color
 export COLORTERM=truecolor
@@ -106,355 +108,134 @@ function __tar_backup()
 
 }
 
-# Проверяет запуск subshell из-под mc
-# И возвращает строку "mc:"
-my_mc() {
-    local _s=
-    if ps $PPID |grep -q mc; then
-        _s="mc:"
-    fi
-    echo ${_s}
-}
 
 # ############
 # myprompt
 # ############
-
-# Defaulst PS1
-# PS1="[\u@\h \W]\\$ "
-# PS1="[\u@\h:\l \W]\\$ "
+# Установка PS1 и PROMPT_COMMAND
+#
+# Используются переменные
+#
+# CLICOLOR[=0] 1 цветное приглашение 0 бесцветное приглашение
+#
+# LONGPATH[=0] 1 показать длинный путь 0 показать короткий путь
+#              По умолчанию 0, папка HOME всегда заменяется ~
+# EASYPROMPT[=0] 1 короткое стандартное приглашение 0 не меняет приглашение
+#
+# PROMPTMSG[=''] Сообщение в приглашении
+#
+# Приглашение имеет вид
+#   1       2             3         4       5         6
+# ┌(*)─(This is MSG)─(Thu Jan 14)─(12:42)─(j0:w1:t1)─(mc)
+# └─(root@ov-ansible)─(bin) #
+#     7        8        9
+# 1 Символ пятницы
+# 2 Сообщение в приглашении, перем PROMPTMSG
+# 3 Дата - День недели, месяц, число
+# 4 Время, 24 часа
+# 5 Индикаторы job, who, tty
+# 6 Индикатор работы mc
+# 7 Пользователь
+# 8 Короткое имя host
+# 9 Текущее местоположение
 
 myprompt() {
-    # Сброс
-    local Color_Off='\[\e[m\]'       # Text Reset
+  history -a
 
-    # Обычные цвета
-    local Black='\[\e[0;30m\]'        # Black
-    local Red='\[\e[0;31m\]'          # Red
-    local Green='\[\e[0;32m\]'        # Green
-    local Yellow='\[\e[0;33m\]'       # Yellow
-    local Blue='\[\e[0;34m\]'         # Blue
-    local Purple='\[\e[0;35m\]'       # Purple
-    local Cyan='\[\e[0;36m\]'         # Cyan
-    local White='\[\e[0;37m\]'        # White
+  local Color_Off='\[\e[m\]'
+  local Green='\[\e[0;32m\]'
+  local Yellow='\[\e[0;33m\]'
+  local Purple='\[\e[0;35m\]'
+  local IRed='\[\e[0;91m\]'
+  local IGreen='\[\e[0;92m\]'
+  local IYellow='\[\e[0;93m\]'
+  local IBlue='\[\e[0;94m\]'
 
-    # Жирные
-    local BBlack='\[\e[1;30m\]'       # Black
-    local BRed='\[\e[1;31m\]'         # Red
-    local BGreen='\[\e[1;32m\]'       # Green
-    local BYellow='\[\e[1;33m\]'      # Yellow
-    local BBlue='\[\e[1;34m\]'        # Blue
-    local BPurple='\[\e[1;35m\]'      # Purple
-    local BCyan='\[\e[1;36m\]'        # Cyan
-    local BWhite='\[\e[1;37m\]'       # White
+  local color1=
+  local pwd1="\\W"
 
-    # Подчёркнутые
-    local UBlack='\[\e[4;30m\]'       # Black
-    local URed='\[\e[4;31m\]'         # Red
-    local UGreen='\[\e[4;32m\]'       # Green
-    local UYellow='\[\e[4;33m\]'      # Yellow
-    local UBlue='\[\e[4;34m\]'        # Blue
-    local UPurple='\[\e[4;35m\]'      # Purple
-    local UCyan='\[\e[4;36m\]'        # Cyan
-    local UWhite='\[\e[4;37m\]'       # White
+  local WHO=$(/usr/bin/who | /usr/bin/wc -l)
+  local TTY=$(/usr/bin/tty | /usr/bin/cut -d/ -f4)
 
-    # Фоновые
-    local On_Black='\[\e[40m\]'       # Black
-    local On_Red='\[\e[41m\]'         # Red
-    local On_Green='\[\e[42m\]'       # Green
-    local On_Yellow='\[\e[43m\]'      # Yellow
-    local On_Blue='\[\e[44m\]'        # Blue
-    local On_Purple='\[\e[45m\]'      # Purple
-    local On_Cyan='\[\e[46m\]'        # Cyan
-    local On_White='\[\e[47m\]'       # White
+  # Friday
+  local EMOJ=
+  if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
+    EMOJ=`printf '\U263C'`
+  fi
 
-    # Высоко Интенсивные
-    local IBlack='\[\e[0;90m\]'       # Black
-    local IRed='\[\e[0;91m\]'         # Red
-    local IGreen='\[\e[0;92m\]'       # Green
-    local IYellow='\[\e[0;93m\]'      # Yellow
-    local IBlue='\[\e[0;94m\]'        # Blue
-    local IPurple='\[\e[0;95m\]'      # Purple
-    local ICyan='\[\e[0;96m\]'        # Cyan
-    local IWhite='\[\e[0;97m\]'       # White
+  if [[ ${CLICOLOR:-0} -eq 0 ]]; then
+    Green=${Color_Off}
+    Yellow=${Color_Off}
+    Purple=${Color_Off}
+    IRed=${Color_Off}
+    IGreen=${Color_Off}
+    IYellow=${Color_Off}
+    IBlue=${Color_Off}
+  fi
 
-    # Жирные Высоко Интенсивные
-    local BIBlack='\[\e[1;90m\]'      # Black
-    local BIRed='\[\e[1;91m\]'        # Red
-    local BIGreen='\[\e[1;92m\]'      # Green
-    local BIYellow='\[\e[1;93m\]'     # Yellow
-    local BIBlue='\[\e[1;94m\]'       # Blue
-    local BIPurple='\[\e[1;95m\]'     # Purple
-    local BICyan='\[\e[1;96m\]'       # Cyan
-    local BIWhite='\[\e[1;97m\]'      # White
+  if [[ $(/usr/bin/id -u) -eq 0 ]]; then
+    color1=${IRed}
+  else
+    color1=${IGreen}
+    pwd1="\\w"
+  fi
 
-    # Высоко Интенсивные фоновые
-    local On_IBlack='\[\e[0;100m\]'   # Black
-    local On_IRed='\[\e[0;101m\]'     # Red
-    local On_IGreen='\[\e[0;102m\]'   # Green
-    local On_IYellow='\[\e[0;103m\]'  # Yellow
-    local On_IBlue='\[\e[0;104m\]'    # Blue
-    local On_IPurple='\[\e[0;105m\]'  # Purple
-    local On_ICyan='\[\e[0;106m\]'    # Cyan
-    local On_IWhite='\[\e[0;107m\]'   # White
+  # Show long path
+  if [[ "${LONGPATH:-0}" -eq 1 ]]; then
+    pwd1="\\w"
+  fi
 
-    local revert=0
+  PS1="${Color_Off}┌"
 
-    if [[ "$1" = "1" ]]; then
-    	revert=1
-    fi
+  # Friday
+  if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
+    EMOJ=`printf '\U263C'`
+    PS1+="(${Yellow}${EMOJ}${Color_Off})─"
+  fi
 
-    history -a
-    history -c
-    history -r
+  # Title message
+  if [[ -n "${PROMPTMSG-}" ]]; then
+    PS1+="(${Purple}${PROMPTMSG-}${Color_Off})─"
+  fi
 
-    local EMOJ=
-    if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
-        EMOJ=`printf '\U263C'`
-    fi
-    if [[ ${CLICOLOR} -eq 1 ]]; then
-        if [[ $(/usr/bin/id -u) -eq 0 ]]; then
-            # Мы root
+  # String 1
+  PS1+="(${IBlue}\\d${Color_Off})─(${IBlue}\\A${Color_Off})"
+  PS1+="─(j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
-            PS1="${Color_Off}"
+  # mc
+  if ps $PPID |grep -q mc; then
+    PS1+="─(${IYellow}mc${Color_Off})"
+  fi
 
-            if [ -n "${PROM_MSG-}" ]; then
-                PS1+="[ "
-                PS1+="${BIYellow}-- "
-                PS1+="${BIPurple}${PROM_MSG}"
-                PS1+="${BIYellow} --"
-                PS1+="${Color_Off}"
-                PS1+=" ]\\n"
-            fi
+  PS1+="\\n└─"
 
-            PS1+="["
+  PS1+="(${color1}\\u@\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
 
-            if [ -n "$EMOJ" ]; then
-                PS1+="${Yellow}${EMOJ} "
-                PS1+="${Color_Off}"
-            fi
+  PS1+="${Color_Off}"
 
-            if ps $PPID |grep -q mc; then
-                PS1+="${BYellow}mc "
-                PS1+="${Color_Off}"
-            fi
+  # Title terminal
+  case $TERM in
+  xterm*|vte*)
+    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+    ;;
+  screen*)
+    printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
+    ;;
+  esac
 
-            if [[ ${revert} -eq 1 ]]; then
-            	PS1+="${URed}${BRed}\\u${Color_Off}${BRed}@\\h"
-            	PS1+="${Color_Off} "
-            fi
+  if [[ "${EASYPROMPT:-0}" -eq 1 ]]; then
+    PS1="${Color_Off}[${color1}\\u@\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+  fi
 
-            PS1+="${BIBlue}\\D{%m/%d}"
-            PS1+=" "
-            PS1+="${BIBlue}\\A"
-            PS1+=" "
-            PS1+="${BIBlue}j:\\j"
-            PS1+=" "
-            PS1+="${BIBlue}w:$(/usr/bin/who | /usr/bin/wc -l)"
-            PS1+=" "
-            PS1+="${BIBlue}tty:$(/usr/bin/tty | /usr/bin/cut -d/ -f4)"
+  if [[ "${EASYPROMPT:-0}" -eq 2 ]]; then
+    PS1="${Color_Off} [ ${IBlue}\\d \\A ${Purple}${PROMPTMSG-}${Color_Off}] [${color1}\\u@\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
+  fi
 
-            PS1+="${Color_Off}"
-            PS1+="]\\n"
-            PS1+="["
-
-            if [[ ${revert} -eq 1 ]]; then
-            	PS1+="${Yellow}\\W"
-            	PS1+="${Color_Off}"
-            	PS1+="]"
-            	PS1+="${Red}\\\$ "
-            	PS1+="${Color_Off}"
-            else
-                PS1+="${URed}${BRed}\\u"
-                PS1+="${Color_Off}"
-                PS1+="${BRed}@\\h"
-                PS1+="${Color_Off} "
-                PS1+="${Yellow}\\W"
-                PS1+="${Color_Off}"
-                PS1+="]"
-                PS1+="${Red}\\\$ "
-                PS1+="${Color_Off}"
-            fi
-
-        else
-            # Мы user
-
-            PS1="${Color_Off}"
-
-            if [ -n "${PROM_MSG-}" ]; then
-                PS1+="[ "
-                PS1+="${BIYellow}-- "
-                PS1+="${BIPurple}${PROM_MSG}"
-                PS1+="${BIYellow} --"
-                PS1+="${Color_Off}"
-                PS1+=" ]\\n"
-            fi
-
-            PS1+="["
-
-            if [ -n "$EMOJ" ]; then
-                PS1+="${Yellow}${EMOJ} "
-                PS1+="${Color_Off}"
-            fi
-
-            if ps $PPID |grep -q mc; then
-                PS1+="${BYellow}mc "
-                PS1+="${Color_Off}"
-            fi
-
-            if [[ ${revert} -eq 1 ]]; then
-            	PS1+="${UGreen}${BGreen}\\u${Color_Off}${BGreen}@\\h"
-            	PS1+="${Color_Off} "
-            fi
-
-            PS1+="${BIBlue}\\D{%m/%d}"
-            PS1+=" "
-            PS1+="${BIBlue}\\A"
-            PS1+=" "
-            PS1+="${BIBlue}j:\\j"
-            PS1+=" "
-            PS1+="${BIBlue}w:$(/usr/bin/who | /usr/bin/wc -l)"
-            PS1+=" "
-            PS1+="${BIBlue}tty:$(/usr/bin/tty | /usr/bin/cut -d/ -f4)"
-
-            PS1+="${Color_Off}"
-            PS1+="]\\n"
-            PS1+="["
-
-            if [[ ${revert} -eq 1 ]]; then
-            	PS1+="${Yellow}\\W"
-            	PS1+="${Color_Off}"
-            	PS1+="]"
-            	PS1+="${BGreen}\\\$ "
-            	PS1+="${Color_Off}"
-            else
-                PS1+="${UGreen}${BGreen}\\u"
-                PS1+="${Color_Off}"
-                PS1+="${BGreen}@\\h"
-                PS1+="${Color_Off} "
-                PS1+="${Yellow}\\W"
-                PS1+="${Color_Off}"
-                PS1+="]"
-                PS1+="${Green}\\\$ "
-                PS1+="${Color_Off}"
-            fi
-
-        fi
-
-    else
-        PS1="${Color_Off}"
-        if [ -n "${PROM_MSG-}" ]; then
-            PS1+="[ -- {PROM_MSG} -- ]\\n"
-        fi
-        PS1+="$(my_mc)[\\u@\\h \\W]\\\$ "
-    fi
-    export PS1
-
-    case $TERM in
-      xterm*|vte*)
-        printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
-        ;;
-      screen*)
-        printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
-        ;;
-     esac
+  export PS1
 }
-
 # ############
 # myprompt
 # ############
-
-
-# ############
-# myprompt2
-# ############
-myprompt2 () {
-    # Сброс
-    local Color_Off='\[\e[m\]'       # Text Reset
-
-    # Обычные цвета
-    local Black='\[\e[0;30m\]'        # Black
-    local Red='\[\e[0;31m\]'          # Red
-    local Green='\[\e[0;32m\]'        # Green
-    local Yellow='\[\e[0;33m\]'       # Yellow
-    local Blue='\[\e[0;34m\]'         # Blue
-    local Purple='\[\e[0;35m\]'       # Purple
-    local Cyan='\[\e[0;36m\]'         # Cyan
-    local White='\[\e[0;37m\]'        # White
-
-    # Жирные
-    local BBlack='\[\e[1;30m\]'       # Black
-    local BRed='\[\e[1;31m\]'         # Red
-    local BGreen='\[\e[1;32m\]'       # Green
-    local BYellow='\[\e[1;33m\]'      # Yellow
-    local BBlue='\[\e[1;34m\]'        # Blue
-    local BPurple='\[\e[1;35m\]'      # Purple
-    local BCyan='\[\e[1;36m\]'        # Cyan
-    local BWhite='\[\e[1;37m\]'       # White
-
-    local my_prom=
-
-    history -a
-    history -c
-    history -r
-
-    if [[ ${CLICOLOR} -eq 1 ]]; then
-        PS1="${Color_Off}"
-        if [ -n "${PROM_MSG-}" ]; then
-            PS1+="[ -- ${BPurple}${PROM_MSG}${Color_Off} -- ]\\n"
-        fi
-        if [[ $(/usr/bin/id -u) -eq 0 ]]; then
-            PS1+="$(my_mc)[${BRed}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BRed}\\\$ ${Color_Off}"
-        else
-            PS1+="$(my_mc)[${BGreen}\\u@${Color_Off}\\h]\\n[${Yellow}\\W${Color_Off}]${BGreen}\\\$ ${Color_Off}"
-        fi
-    else
-        PS1="${Color_Off}"
-        if [ -n "${PROM_MSG-}" ]; then
-            PS1+="[ -- ${PROM_MSG} -- ]\\n"
-        fi
-        PS1+="$(my_mc)[\\u@\\h]\\n[\\W]\\\$ "
-    fi
-    export PS1
-
-    case $TERM in
-      xterm*|vte*)
-        printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
-        ;;
-      screen*)
-        printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
-        ;;
-     esac
-}
-
-# ############
-# myprompt2
-# ############
-
-
-# Замена prompt
-revert_prompt() {
-    if [[ "$1" == 1 ]]; then
-        PROMPT_COMMAND='myprompt 1'
-    elif [[ "$1" == 2 ]]; then
-        PROMPT_COMMAND='myprompt2'
-    else
-        PROMPT_COMMAND='myprompt 0'
-    fi
-    export PROMPT_COMMAND
-}
-
-# prompt = '# _' | '$ _'
-easy_prompt() {
-    PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
-    if [[ "$(id -u)" -eq 0 ]]; then
-    	PS1='\[\e[m\]\[\e[1;31m\]\$ \[\e[m\]'
-    else
-    	PS1='\[\e[m\]\[\e[1;32m\]\$ \[\e[m\]'
-    fi
-    export PROMPT_COMMAND
-    export PS1
-}
 
 
 if [ -x /usr/bin/mcedit ]; then
@@ -598,9 +379,7 @@ if type -P vim &>/dev/null; then
     alias vi=/usr/bin/vim
 fi
 
-# Install grc from https://github.com/garabik/grc
-# cd /usr/local/src && git clone https://github.com/garabik/grc.git && cd grc && ./install.sh
-
+# https://github.com/garabik/grc
 if type grc &>/dev/null; then
    if [ -r ~/.grc.bashrc ]; then
        . ~/.grc.bashrc
@@ -629,4 +408,5 @@ if [ -r /etc/profile.d/bash_completion.sh ]; then
     . /etc/profile.d/bash_completion.sh
 fi
 
-export PROMPT_COMMAND=myprompt
+export PROMPT_COMMAND='myprompt'
+export PS1='[\u@\h \W] \$ '
