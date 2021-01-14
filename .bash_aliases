@@ -146,6 +146,7 @@ myprompt() {
   local Green='\[\e[0;32m\]'
   local Yellow='\[\e[0;33m\]'
   local Purple='\[\e[0;35m\]'
+  local White='\[\e[0;37m\]'
   local IRed='\[\e[0;91m\]'
   local IGreen='\[\e[0;92m\]'
   local IYellow='\[\e[0;93m\]'
@@ -168,6 +169,7 @@ myprompt() {
     Green=${Color_Off}
     Yellow=${Color_Off}
     Purple=${Color_Off}
+    White=${Color_Off}
     IRed=${Color_Off}
     IGreen=${Color_Off}
     IYellow=${Color_Off}
