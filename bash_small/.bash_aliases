@@ -12,17 +12,26 @@ export CLICOLOR=1
 export USE_LS_COLORS=1
 
 myprompt() {
-    history -a ; history -c ; history -r
+    history -a
     if [ "$CLICOLOR" == "1" ]; then
         if [ "$(id -u)" == "0" ]; then
-            PS1='\[\e[m\][\[\e[1;31m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;31m\]\$\[\e[m\] '
+            PS1='\[\e[m\][\[\e[1;31m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;31m\] \$\[\e[m\] '
         else
-            PS1='\[\e[m\][\[\e[1;32m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;32m\]\$\[\e[m\] '
+            PS1='\[\e[m\][\[\e[1;32m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;32m\] \$\[\e[m\] '
         fi
     else
         PS1='\[\e[m\][\u@\h \W]\$ '
     fi
-    printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+
+    case $TERM in
+    xterm*|vte*)
+      printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"
+      ;;
+    screen*)
+      printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"
+      ;;
+    esac
+
 }
 
 shopt -s cmdhist

@@ -1,0 +1,33 @@
+
+= t r
++ ! t t
+i       Convert from KOI8-R to UTF-8 current file
+        cp %f %f.KOI8-R
+        iconv -f KOI8-R -t UTF-8 < %f.KOI8-R > %f
+        rm -f %f.KOI8-R
+
++ t t
+I       Convert from KOI8-R to UTF-8 tagged files
+        for i in %t
+        do
+          cp $i $i.KOI8-R
+          iconv -f KOI8-R -t UTF-8 < $i.KOI8-R > $i
+          rm -f $i.KOI8-R
+        done
+
+= t r
++ ! t t
+i       Convert from CP1251 to UTF-8 current file
+        cp %f %f.CP1251
+        iconv -f CP1251 -t UTF-8 < %f.CP1251 > %f
+        rm -f %f.CP1251
+
++ t t
+I       Convert from CP1251 to UTF-8 tagged files
+        for i in %t
+        do
+          cp $i $i.CP1251
+          iconv -f CP1251 -t UTF-8 < $i.CP1251 > $i
+          rm -f $i.CP1251
+        done
+

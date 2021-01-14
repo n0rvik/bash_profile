@@ -11,6 +11,7 @@
 
 Профиль для тех хостов, где нельзя использовать общий профиль.
 
+- mc
 - Копирование
 
 git clone https://github.com/n0rvik/bash_profile.git

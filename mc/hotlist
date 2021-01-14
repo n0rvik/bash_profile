@@ -1,0 +1,7 @@
+ENTRY "/root" URL "/root"
+ENTRY "/etc" URL "/etc"
+ENTRY "/etc/yum" URL "/etc/yum"
+ENTRY "/etc/ssh" URL "/etc/ssh"
+ENTRY "/etc/sysconfig" URL "/etc/sysconfig"
+ENTRY "/mnt" URL "/mnt"
+ENTRY "/var/log" URL "/var/log"

@@ -112,10 +112,6 @@ if type vim &>/dev/null; then
     alias vi='vim'
 fi
 
-# Defaulst PS1
-# PS1="[\u@\h \W]\\$ "
-# PS1="[\u@\h:\l \W]\\$ "
-
 case $TERM in
   xterm*|vte*)
     PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
@@ -127,17 +123,9 @@ esac
 export PROMPT_COMMAND
 
 if [ "$(id -u)" == "0" ]; then
-    PS1='[\[\033[01;31m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;31m\]\$\[\033[00m\] '
+    PS1='[\[\033[01;31m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;31m\] \$\[\033[00m\] '
 else
-    PS1='[\[\033[01;32m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;32m\]\$\[\033[00m\] '
+    PS1='[\[\033[01;32m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;32m\] \$\[\033[00m\] '
 fi
 export PS1
-
-COWSAY=`/usr/bin/which cowsay 2>/dev/null`
-if [ -n "$COWSAY" ]; then
-    $COWSAY "Hi, people! Today is $(/usr/bin/date +'%A %d %B %Y')"
-else
-    echo -e "\nHi, people! Today is $(/usr/bin/date +'%A %d %B %Y')\n\n"
-fi
-unset COWSAY
 

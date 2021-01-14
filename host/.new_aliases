@@ -45,15 +45,28 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
-if type -P dircolors &>/dev/null ; then
-    if [[ -f ~/.dir_colors ]] ; then
-        eval $(dircolors -b ~/.dir_colors)
-    elif [[ -f /etc/DIR_COLORS.256color ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS.256color)
-    elif [[ -f /etc/DIR_COLORS ]] ; then
-        eval $(dircolors -b /etc/DIR_COLORS)
-    fi
+for colors in "$HOME/.dir_colors" "$HOME/.dircolors"; do
+  [ -e "$colors" ] && COLORS="$colors"
+done
+
+[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS.256color" ] && \
+[ "x`/usr/bin/tty -s && /usr/bin/tput colors 2>/dev/null`" = "x256" ] && \
+COLORS="/etc/DIR_COLORS.256color"
+
+[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS" ] && \
+COLORS="/etc/DIR_COLORS"
+
+if [ -n "$COLORS" ]; then
+  eval "`/usr/bin/dircolors --sh $COLORS 2>/dev/null`"
+  export LS_OPTIONS='--color=auto'
+
+  alias grep='/usr/bin/grep --color=auto'
+  alias fgrep='/usr/bin/grep --color=auto'
+  alias egrep='/usr/bin/grep --color=auto'
+
 fi
+
+unset COLORS colors
 
 export LS_OPTIONS='--color=auto'
 
@@ -82,15 +95,20 @@ if type vim &>/dev/null; then
     alias vi=/usr/bin/vim
 fi
 
-# Defaulst PS1
-# PS1="[\u@\h \W]\\$ "
-# PS1="[\u@\h:\l \W]\\$ "
+case $TERM in
+  xterm*|vte*)
+    PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+    ;;
+  screen*)
+    PROMPT_COMMAND='history -a;printf "\033k%s@%s:%s\033\\" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+    ;;
+esac
+export PROMPT_COMMAND
 
-PROMPT_COMMAND='history -a;printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
 if [ "$(id -u)" == "0" ]; then
-    PS1='[\[\033[01;31m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;31m\]\$\[\033[00m\] '
+    PS1='[\[\033[01;31m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;31m\] \$\[\033[00m\] '
 else
-    PS1='[\[\033[01;32m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;32m\]\$\[\033[00m\] '
+    PS1='[\[\033[01;32m\]\u@\h \[\033[01;33m\]\W\[\033[00m\]]\[\033[01;32m\] \$\[\033[00m\] '
 fi
 
 COWSAY=`/usr/bin/which cowsay 2>/dev/null`

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+. $HOME/.bashrc
+PROMPT_COMMAND='history -a'
+PS1="mc:[\\u@\\h \\W] \\\$ "
+
