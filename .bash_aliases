@@ -150,6 +150,7 @@ myprompt() {
   local IGreen='\[\e[0;92m\]'
   local IYellow='\[\e[0;93m\]'
   local IBlue='\[\e[0;94m\]'
+  local IPurple='\[\e[0;95m\]'
 
   local color1=
   local pwd1="\\W"
@@ -171,6 +172,7 @@ myprompt() {
     IGreen=${Color_Off}
     IYellow=${Color_Off}
     IBlue=${Color_Off}
+    IPurple=${Color_Off}
   fi
 
   if [[ $(/usr/bin/id -u) -eq 0 ]]; then
@@ -209,7 +211,7 @@ myprompt() {
 
   PS1+="\\n└─"
 
-  PS1+="(${color1}\\u@\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
+  PS1+="(${color1}\\u@${IPurple}\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
 
   PS1+="${Color_Off}"
 
@@ -224,11 +226,11 @@ myprompt() {
   esac
 
   if [[ "${EASYPROMPT:-0}" -eq 1 ]]; then
-    PS1="${Color_Off}[${color1}\\u@\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off}[${color1}\\u@${IPurple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
   fi
 
   if [[ "${EASYPROMPT:-0}" -eq 2 ]]; then
-    PS1="${Color_Off} [ ${IBlue}\\d \\A ${Purple}${PROMPTMSG-}${Color_Off}] [${color1}\\u@\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off} [ ${IBlue}\\d \\A ${Purple}${PROMPTMSG-}${Color_Off}] [${color1}\\u@${IPurple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
   fi
 
   export PS1
