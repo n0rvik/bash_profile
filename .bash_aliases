@@ -185,7 +185,7 @@ myprompt() {
     pwd1="\\w"
   fi
 
-  PS1="${Color_Off}┌"
+  PS1="${Color_Off}\\n┌"
 
   # Friday
   if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
