@@ -215,7 +215,7 @@ myprompt() {
 
   # String 1
   PS1+="(${IBlue}\\d${Color_Off})─(${IBlue}\\A${Color_Off})"
-  PS1+="─(\?${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
+  PS1+="─(ok ${color2}${EXIT}${Color_Off} j ${Green}\\j${Color_Off} w ${Green}${WHO}${Color_Off} t ${Green}${TTY}${Color_Off})"
 
   # mc
   if ps $PPID |grep -q mc; then
