@@ -8,7 +8,7 @@ esac
 
 # Сообщение в строке prompt
 export PROMPTMSG=
-export PROMPTTIME=0
+export PROMPTTIME=1
 export PROMPTEXIT=1
 export PROMPTJOBS=1
 export PROMPTWHO=0
@@ -177,9 +177,6 @@ __myprompt() {
 
   # Friday
   local EMOJ=
-  if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
-    EMOJ=`printf '\U263C'`
-  fi
 
   if [[ ${CLICOLOR:-0} -eq 0 ]]; then
     Green=${Color_Off}
@@ -217,20 +214,23 @@ __myprompt() {
   # Friday
   if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
     EMOJ=`printf '\U263C'`
-    PS1+="(${Yellow}${EMOJ}${Color_Off})─"
+    PS1+="(${Yellow}${EMOJ}${Color_Off})"
   fi
 
   # Title message
   if [[ -n "${PROMPTMSG-}" ]]; then
-    PS1+="( -- ${ICyan}${PROMPTMSG-}${Color_Off} -- )"
-    if [[ "${PROMPTTIME-1}" = "1" ]]; then
+    if [[ -n "${EMOJ}" ]]; then
       PS1+="─"
     fi
+    PS1+="( -- ${ICyan}${PROMPTMSG-}${Color_Off} -- )"
   fi
 
   # String 1
   if [[ "${PROMPTTIME-1}" = "1" ]]; then
     #PS1+="(${Blue}\\d${Color_Off})─(${Blue\\A${Color_Off})"
+    if [[ -n "${PROMPTMSG}" || -n "${EMOJ}" ]]; then
+      PS1+="─"
+    fi
     PS1+="(\\d \\A${Color_Off})"
   fi
   
