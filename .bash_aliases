@@ -15,7 +15,7 @@ export TERM=xterm-256color
 export COLORTERM=truecolor
 export CLICOLOR=1
 #export USER_LS_COLORS=1
-LS_OPTIONS=
+export LS_OPTIONS=
 
 # Сохранять все строки многострочной команды в одной записи списка истории
 shopt -s cmdhist
@@ -300,12 +300,16 @@ bind '"\e[D": backward-char'
 # COLORS
 # ######
 
+if [[ -n "${LS_COLORS}" ]]; then
+  export LS_COLORS="${LS_COLORS:+$LS_COLORS*.conf=38;5;149:*.cfg=38;5;149:*.key=38;5;141:*.cer=38;5;141:*.crt=38;5;141:*.pem=38;5;141:*.bash_aliases=38;5;134:*.bash_history=38;5;134:*.bash_logout=38;5;134:*.bash_profile=38;5;134:*.bashrc=38;5;134:*.dir_colors=38;5;134:*.patch=38;5;105:*.diff=38;5;105:}"
+fi
+
 #if [[ -r /etc/profile.d/colorls.sh ]]; then
 #    . /etc/profile.d/colorls.sh
 #fi
 
 if [[ -n "${CLICOLOR-}" ]]; then
-  LS_OPTIONS='--color=auto'
+  export LS_OPTIONS='--color=auto'
 fi
 
 alias grep='/usr/bin/grep --color=auto' 2>/dev/null
