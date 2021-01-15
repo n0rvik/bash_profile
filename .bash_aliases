@@ -8,6 +8,11 @@ esac
 
 # Сообщение в строке prompt
 export PROMPTMSG=
+export PROMPTTIME=0
+export PROMPTEXIT=1
+export PROMPTJOBS=1
+export PROMPTWHO=0
+export PROMPTTTY=0
 export LONGPATH=0
 export EASYPROMPT=0
 
