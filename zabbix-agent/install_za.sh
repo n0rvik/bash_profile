@@ -11,8 +11,13 @@ elif [ "x$os_ver" == "x8" ]; then
   dnf install zabbix-agent
 fi
 
+if ! [[ -d /etc/zabbix ]]; then
+  echo 'Zabbix folder /etc/zabbix not exist'
+  exit 1
+fi
+
 cd /etc/zabbix
-cp zabbix_agentd.conf zabbix_agentd.conf.orig
+cp zabbix_agentd.conf zabbix_agentd.conf.`date +'%Y%m%dT%H%M%S'`
 echo 'Include=/etc/zabbix/zabbix_agentd.d/*.conf' > zabbix_agentd.conf
 
 sed -i -e 's|^\(PIDFile=\).*$|\1/tmp/zabbix_agentd.pid|' /usr/lib/systemd/system/zabbix-agent.service
@@ -24,7 +29,7 @@ PidFile=/tmp/zabbix_agentd.pid
 LogFile=/var/log/zabbix/zabbix_agentd.log
 LogFileSize=0
 Server=192.168.64.21
-ServerActive=
+ServerActive=192.168.64.21
 ListenPort=10050
 HostnameItem=system.hostname
 HostMetadataItem=system.uname

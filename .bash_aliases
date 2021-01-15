@@ -140,6 +140,7 @@ function __tar_backup()
 # 9 Текущее местоположение
 
 myprompt() {
+  local EXIT=$?
   history -a
 
   local Color_Off='\[\e[m\]'
@@ -158,6 +159,9 @@ myprompt() {
 
   local WHO=$(/usr/bin/who | /usr/bin/wc -l)
   local TTY=$(/usr/bin/tty | /usr/bin/cut -d/ -f4)
+  
+  # Exit code
+  local color2=
 
   # Friday
   local EMOJ=
@@ -176,6 +180,13 @@ myprompt() {
     IBlue=${Color_Off}
     IPurple=${Color_Off}
   fi
+
+  if [[ "${EXIT}" -eq 0 ]]; then
+    color2=${IGreen}
+  else
+    color2=${IRed}
+  fi
+
 
   if [[ $(/usr/bin/id -u) -eq 0 ]]; then
     color1=${IRed}
@@ -204,7 +215,7 @@ myprompt() {
 
   # String 1
   PS1+="(${IBlue}\\d${Color_Off})─(${IBlue}\\A${Color_Off})"
-  PS1+="─(j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
+  PS1+="─(\?${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
   # mc
   if ps $PPID |grep -q mc; then
