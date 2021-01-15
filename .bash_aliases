@@ -14,7 +14,8 @@ export EASYPROMPT=0
 export TERM=xterm-256color
 export COLORTERM=truecolor
 export CLICOLOR=1
-export USE_LS_COLORS=1
+#export USER_LS_COLORS=1
+LS_OPTIONS=
 
 # Сохранять все строки многострочной команды в одной записи списка истории
 shopt -s cmdhist
@@ -31,7 +32,8 @@ shopt -s direxpand
 # bash будет пытаться исправлять имена каталогов
 shopt -s dirspell
 
-export HISTCONTROL=ignorespace:ignoredups
+export HISTCONTROL=ignoreboth
+# export HISTCONTROL=ignorespace:ignoredups
 export HISTSIZE=100000
 export HISTFILESIZ=100000
 export HISTIGNORE="&:[bf]g:pwd:ls:ls -la:ls -ltr:ll:lld:lla:cd:exit:df:htop:atop:top:ps ax"
@@ -44,7 +46,7 @@ function pathmunge() {
         *:"$1":*)
             ;;
         *)
-            if [ "$2" = "after" ] ; then
+            if [[ "$2" = "after" ]] ; then
                 PATH=$PATH:$1
             else
                 PATH=$1:$PATH
@@ -110,7 +112,7 @@ function __tar_backup()
 
 
 # ############
-# myprompt
+# __myprompt
 # ############
 # Установка PS1 и PROMPT_COMMAND
 #
@@ -139,9 +141,12 @@ function __tar_backup()
 # 8 Короткое имя host
 # 9 Текущее местоположение
 
-myprompt() {
+__myprompt() {
   local EXIT=$?
+
   history -a
+  history -c
+  history -r
 
   local Color_Off='\[\e[m\]'
   local Green='\[\e[0;32m\]'
@@ -186,7 +191,6 @@ myprompt() {
   else
     color2=${IRed}
   fi
-
 
   if [[ $(/usr/bin/id -u) -eq 0 ]]; then
     color1=${IRed}
@@ -238,10 +242,13 @@ myprompt() {
     ;;
   esac
 
+  # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT:-0}" -eq 1 ]]; then
     PS1="${Color_Off}[${color1}\\u@${IPurple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
   fi
 
+  # [ \\d \\A ${PROMPTMSG-}] 
+  # [\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT:-0}" -eq 2 ]]; then
     PS1="${Color_Off} [ ${IBlue}\\d \\A ${Purple}${PROMPTMSG-}${Color_Off}] [${color1}\\u@${IPurple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
   fi
@@ -249,11 +256,10 @@ myprompt() {
   export PS1
 }
 # ############
-# myprompt
+# __myprompt
 # ############
 
-
-if [ -x /usr/bin/mcedit ]; then
+if [[ -x /usr/bin/mcedit ]]; then
     export EDITOR=/usr/bin/mcedit
 fi
 
@@ -293,34 +299,18 @@ bind '"\e[D": backward-char'
 # ######
 # COLORS
 # ######
-COLORS=
-LS_OPTIONS=
 
-for colors in "$HOME/.dir_colors" "$HOME/.dircolors"; do
-  [ -e "$colors" ] && COLORS="$colors"
-done
+#if [[ -r /etc/profile.d/colorls.sh ]]; then
+#    . /etc/profile.d/colorls.sh
+#fi
 
-[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS.256color" ] && \
-[ "x`/usr/bin/tty -s && /usr/bin/tput colors 2>/dev/null`" = "x256" ] && \
-COLORS="/etc/DIR_COLORS.256color"
-
-[ -z "$COLORS" ] && [ -e "/etc/DIR_COLORS" ] && \
-COLORS="/etc/DIR_COLORS"
-
-if [ -n "$COLORS" ]; then
-  eval "`/usr/bin/dircolors --sh $COLORS 2>/dev/null`"
-  export LS_OPTIONS='--color=auto'
-
-  alias grep='/usr/bin/grep --color=auto'
-  alias fgrep='/usr/bin/grep --color=auto'
-  alias egrep='/usr/bin/grep --color=auto'
-
+if [[ -n "${CLICOLOR-}" ]]; then
+  LS_OPTIONS='--color=auto'
 fi
 
-unset COLORS colors
-# ######
-# COLORS
-# ######
+alias grep='/usr/bin/grep --color=auto' 2>/dev/null
+alias fgrep='/usr/bin/grep --color=auto' 2>/dev/null
+alias egrep='/usr/bin/grep --color=auto' 2>/dev/null
 
 alias og="/usr/bin/ls $LS_OPTIONS -ogrt" 2>/dev/null
 alias ls="/usr/bin/ls $LS_OPTIONS" 2>/dev/null
@@ -396,9 +386,9 @@ fi
 
 # https://github.com/garabik/grc
 if type grc &>/dev/null; then
-   if [ -r ~/.grc.bashrc ]; then
+   if [[ -r ~/.grc.bashrc ]]; then
        . ~/.grc.bashrc
-   elif [ -r /etc/grc.bashrc ]; then
+   elif [[ -r /etc/grc.bashrc ]]; then
        . /etc/grc.bashrc
    fi
 fi
@@ -413,15 +403,15 @@ if type pygmentize &>/dev/null; then
     export LESSCOLORIZER=`type -p pygmentize`
 fi
 
-# [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+# [[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
 
 if type colordiff &>/dev/null ; then
     alias diff=`type -p colordiff`
 fi
 
-if [ -r /etc/profile.d/bash_completion.sh ]; then
-    . /etc/profile.d/bash_completion.sh
-fi
+#if [[ -r /etc/profile.d/bash_completion.sh ]]; then
+#    . /etc/profile.d/bash_completion.sh
+#fi
 
-export PROMPT_COMMAND='myprompt'
+export PROMPT_COMMAND='__myprompt'
 export PS1='[\u@\h \W] \$ '
