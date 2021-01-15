@@ -224,28 +224,28 @@ __myprompt() {
   #PS1+="─(e${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
   # Exit code
-  if [[ ! "${EXIT}" = "0" ]]; then
+  if [[ ! "${EXIT}" = "0" && "${PROMPTEXIT-1}" = "1" ]]; then
      PS1+="─(err:${color2}${EXIT}${Color_Off})"
   fi
 
   # Jobs count
-  if [[ ! "${JBS}" = "0" ]]; then
+  if [[ ! "${JBS}" = "0" && "${PROMPTJOBS-1}" = "1" ]]; then
      PS1+="─(jobs:${Green}${JBS}${Color_Off})"
   fi
 
   # Who
   if [[ "${PROMPTWHO-0}" = "1" ]]; then
-    PS1+="─(who:${Green}${WHO}${Color_Off})"
+    PS1+="─(who:${White}${WHO}${Color_Off})"
   fi
 
   # TTY
   if [[ "${PROMPTTTY-0}" = "1" ]]; then
-    PS1+="─(tty:${Green}${TTY}${Color_Off})"
+    PS1+="─(tty:${White}${TTY}${Color_Off})"
   fi
 
   # mc
   if ps $PPID |grep -q mc; then
-    PS1+="─(${IYellow}mc${Color_Off})"
+    PS1+="─(${IPurple}mc${Color_Off})"
   fi
 
   PS1+="\\n└─"
