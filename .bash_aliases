@@ -153,6 +153,7 @@ __myprompt() {
   history -c
   history -r
 
+  local numprompt=0
   local Color_Off='\[\e[m\]'
   local Green='\[\e[0;32m\]'
   local Yellow='\[\e[0;33m\]'
@@ -215,50 +216,73 @@ __myprompt() {
   if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
     EMOJ=`printf '\U263C'`
     PS1+="(${Yellow}${EMOJ}${Color_Off})"
+    numprompt=1
   fi
 
   # Title message
   if [[ -n "${PROMPTMSG-}" ]]; then
-    if [[ -n "${EMOJ}" ]]; then
+    if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
     PS1+="( -- ${ICyan}${PROMPTMSG-}${Color_Off} -- )"
+    numprompt=1
   fi
 
   # String 1
   if [[ "${PROMPTTIME-1}" = "1" ]]; then
     #PS1+="(${Blue}\\d${Color_Off})─(${Blue\\A${Color_Off})"
-    if [[ -n "${PROMPTMSG}" || -n "${EMOJ}" ]]; then
+    if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
     PS1+="(\\d \\A${Color_Off})"
+    numprompt=1
   fi
   
   #PS1+="─(e${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
   # Exit code
   if [[ ! "${EXIT}" = "0" && "${PROMPTEXIT-1}" = "1" ]]; then
-     PS1+="─(err:${color2}${EXIT}${Color_Off})"
+    if [[ "${numprompt}" -gt 0 ]]; then
+      PS1+="─"
+    fi
+    PS1+="(err:${color2}${EXIT}${Color_Off})"
+    numprompt=1
   fi
 
   # Jobs count
   if [[ ! "${JBS}" = "0" && "${PROMPTJOBS-1}" = "1" ]]; then
-     PS1+="─(jobs:${Green}${JBS}${Color_Off})"
+    if [[ "${numprompt}" -gt 0 ]]; then
+      PS1+="─"
+    fi
+    PS1+="(jobs:${Green}${JBS}${Color_Off})"
+    numprompt=1
   fi
 
   # Who
   if [[ "${PROMPTWHO-0}" = "1" ]]; then
-    PS1+="─(who:${White}${WHO}${Color_Off})"
+    if [[ "${numprompt}" -gt 0 ]]; then
+      PS1+="─"
+    fi
+    PS1+="(who:${White}${WHO}${Color_Off})"
+    numprompt=1
   fi
 
   # TTY
   if [[ "${PROMPTTTY-0}" = "1" ]]; then
-    PS1+="─(tty:${White}${TTY}${Color_Off})"
+    if [[ "${numprompt}" -gt 0 ]]; then
+      PS1+="─"
+    fi
+    PS1+="(tty:${White}${TTY}${Color_Off})"
+    numprompt=1
   fi
 
   # mc
   if ps $PPID |grep -q mc; then
-    PS1+="─(${IPurple}mc${Color_Off})"
+    if [[ "${numprompt}" -gt 0 ]]; then
+      PS1+="─"
+    fi
+    PS1+="(${IPurple}mc${Color_Off})"
+    numprompt=1
   fi
 
   PS1+="\\n└─"
