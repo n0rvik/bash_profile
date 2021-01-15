@@ -219,7 +219,8 @@ __myprompt() {
   fi
 
   # String 1
-  PS1+="(${White}\\d${Color_Off})─(${White}\\A${Color_Off})"
+  #PS1+="(${Blue}\\d${Color_Off})─(${Blue\\A${Color_Off})"
+  PS1+="(\\d \\A${Color_Off})"
   #PS1+="─(e${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
   # Exit code
@@ -229,17 +230,17 @@ __myprompt() {
 
   # Jobs count
   if [[ ! "${JBS}" = "0" ]]; then
-     PS1+="─(jobs:${Greein}${JBS}${Color_Off})"
+     PS1+="─(jobs:${Green}${JBS}${Color_Off})"
   fi
 
   # Who
   if [[ "${PROMPTWHO-0}" = "1" ]]; then
-    PS1+="─(who:${Greein}${WHO}${Color_Off})"
+    PS1+="─(who:${Green}${WHO}${Color_Off})"
   fi
 
   # TTY
   if [[ "${PROMPTTTY-0}" = "1" ]]; then
-    PS1+="─(tty:${Greein}${TTY}${Color_Off})"
+    PS1+="─(tty:${Green}${TTY}${Color_Off})"
   fi
 
   # mc
@@ -249,7 +250,7 @@ __myprompt() {
 
   PS1+="\\n└─"
 
-  PS1+="(${color1}\\u@${IPurple}\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
+  PS1+="(${color1}\\u@${Purple}\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
 
   PS1+="${Color_Off}"
 
