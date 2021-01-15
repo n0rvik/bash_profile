@@ -158,6 +158,7 @@ __myprompt() {
   local IYellow='\[\e[0;93m\]'
   local IBlue='\[\e[0;94m\]'
   local IPurple='\[\e[0;95m\]'
+  local ICyan='\[\e[0;96m\]'
 
   local color1=
   local pwd1="\\W"
@@ -185,6 +186,7 @@ __myprompt() {
     IYellow=${Color_Off}
     IBlue=${Color_Off}
     IPurple=${Color_Off}
+    ICyan=${Color_Off}
   fi
 
   if [[ "${EXIT}" -eq 0 ]]; then
@@ -215,12 +217,18 @@ __myprompt() {
 
   # Title message
   if [[ -n "${PROMPTMSG-}" ]]; then
-    PS1+="( -- ${Purple}${PROMPTMSG-} -- ${Color_Off})─"
+    PS1+="( -- ${ICyan}${PROMPTMSG-}${Color_Off} -- )"
+    if [[ "${PROMPTTIME-1}" = "1" ]]; then
+      PS1+="─"
+    fi
   fi
 
   # String 1
-  #PS1+="(${Blue}\\d${Color_Off})─(${Blue\\A${Color_Off})"
-  PS1+="(\\d \\A${Color_Off})"
+  if [[ "${PROMPTTIME-1}" = "1" ]]; then
+    #PS1+="(${Blue}\\d${Color_Off})─(${Blue\\A${Color_Off})"
+    PS1+="(\\d \\A${Color_Off})"
+  fi
+  
   #PS1+="─(e${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
   # Exit code
