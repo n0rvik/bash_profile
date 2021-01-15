@@ -125,15 +125,15 @@ function __tar_backup()
 # PROMPTMSG[=''] Сообщение в приглашении
 #
 # Приглашение имеет вид
-#   1       2             3         4       5         6
-# ┌(*)─(This is MSG)─(Thu Jan 14)─(12:42)─(j0:w1:t1)─(mc)
+#   1       2             3         4          5        6
+# ┌(*)─(This is MSG)─(Thu Jan 14)─(12:42)─(e0:j0:w1:t1)─(mc)
 # └─(root@ov-ansible)─(bin) #
 #     7        8        9
 # 1 Символ пятницы
 # 2 Сообщение в приглашении, перем PROMPTMSG
 # 3 Дата - День недели, месяц, число
 # 4 Время, 24 часа
-# 5 Индикаторы job, who, tty
+# 5 Индикаторы exit code, job, who, tty
 # 6 Индикатор работы mc
 # 7 Пользователь
 # 8 Короткое имя host
@@ -215,7 +215,7 @@ myprompt() {
 
   # String 1
   PS1+="(${IBlue}\\d${Color_Off})─(${IBlue}\\A${Color_Off})"
-  PS1+="─(${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
+  PS1+="─(e${color2}${EXIT}${Color_Off}:j${Green}\\j${Color_Off}:w${Green}${WHO}${Color_Off}:t${Green}${TTY}${Color_Off})"
 
   # mc
   if ps $PPID |grep -q mc; then
