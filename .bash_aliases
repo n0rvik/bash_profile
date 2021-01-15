@@ -233,12 +233,12 @@ __myprompt() {
   fi
 
   # Who
-  if [[ "${PROMPTWHO-0}" -eq 1 ]]
+  if [[ "${PROMPTWHO-0}" = "1" ]]; then
     PS1+="─(who:${Greein}${WHO}${Color_Off})"
   fi
 
   # TTY
-  if [[ "${PROMPTTTY-0}" -eq 1 ]]
+  if [[ "${PROMPTTTY-0}" = "1" ]]; then
     PS1+="─(tty:${Greein}${TTY}${Color_Off})"
   fi
 
