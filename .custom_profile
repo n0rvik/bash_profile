@@ -1,0 +1,94 @@
+# setting PS1
+
+# Skip all for noninteractive shells.
+[ ! -t 0 ] && return
+
+function pathmunge() {
+    case ":${PATH}:" in
+        *:"$1":*)
+            ;;
+        *)
+            if [[ "$2" = "after" ]] ; then
+                PATH=$PATH:$1
+            else
+                PATH=$1:$PATH
+            fi
+    esac
+}
+
+if [ -d "$HOME/bin" ] ; then
+    pathmunge "$HOME/bin"
+fi
+
+if [ -d "$HOME/.local/bin" ] ; then
+    pathmunge "$HOME/.local/bin"
+fi
+
+export PATH
+
+unset -f pathmunge
+
+export TERM=xterm-256color
+export COLORTERM=truecolor
+export CLICOLOR=1
+
+shopt -s cmdhist
+shopt -s histappend
+shopt -s cdspell
+shopt -s checkwinsize
+shopt -s extglob
+shopt -s globstar
+shopt -s direxpand
+shopt -s dirspell
+
+export HISTCONTROL=ignoreboth
+export HISTSIZE=100000
+export HISTFILESIZ=100000
+export HISTTIMEFORMAT="%d/%h/%y - %H:%M:%S "
+
+alias grep='/usr/bin/grep --color=auto' 2>/dev/null
+alias fgrep='/usr/bin/grep --color=auto' 2>/dev/null
+alias egrep='/usr/bin/grep --color=auto' 2>/dev/null
+
+alias og="/usr/bin/ls --color-auto -ogrt" 2>/dev/null
+alias ls="/usr/bin/ls --color-auto" 2>/dev/null
+alias ll="/usr/bin/ls --color-auto -l" 2>/dev/null
+alias lld="/usr/bin/ls --color-auto -ld" 2>/dev/null
+alias lla="/usr/bin/ls --color-auto -lA" 2>/dev/null
+alias llh="/usr/bin/ls --color-auto -lah --time-style=+%F\\ %H:%M" 2>/dev/null
+alias llt="/usr/bin/ls --color-auto -lah --sort=time" 2>/dev/null
+alias llr="/usr/bin/ls --color-auto -lah --sort=time --revers" 2>/dev/null
+alias la="/usr/bin/ls --color-auto -A" 2>/dev/null
+alias lt="/usr/bin/ls --color-auto -ltr" 2>/dev/null
+alias l="/usr/bin/ls --color-auto -CF" 2>/dev/null
+alias l.="/usr/bin/ls -d .* --color-auto" 2>/dev/null
+alias lsl="/usr/bin/ls -lhFA | less"
+alias lsdate="/usr/bin/ls --color-auto -l --time-style='+%d-%m-%Y'" 2>/dev/null
+
+alias j='/usr/bin/jobs -l'
+alias h='history 10'
+
+bind 'set show-all-if-ambiguous on'
+bind 'TAB:menu-complete'
+bind 'set menu-complete-display-prefix on'
+bind 'set completion-ignore-case on'
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+bind '"\e[C": forward-char'
+bind '"\e[D": backward-char'
+
+if [[ "${CLICOLOR-0}" -eq 1 ]]; then
+  PS1='\[\e[m\] \[\e[0;94m\]\d \A \l\n\[\e[m\]['
+  if [[ $(/usr/bin/id -u) -eq 0 ]]; then
+    PS1+='\[\e[0;91m\]\u@\[\e[0;35m\]\h \[\e[0;33m\]\W\[\e[m\]] \[\e[0;91m\]\$ \[\e[m\]'
+  else
+    PS1+='\[\e[0;92m\]\u@\[\e[0;35m\]\h \[\e[0;33m\]\W\[\e[m\]] \[\e[0;92m\]\$ \[\e[m\]'
+  fi
+else
+  PS1=' \d \A \l\n[\u@\h \W] \$ '
+fi
+
+export PS1
+
+export PROMPT_COMMAND='${PROMPT_COMMAND:-history -a; history -c; history -r; $PROMPT_COMMAND;}'
+
