@@ -234,7 +234,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(\\d \\A${Color_Off})"
+    PS1+="(${IBlue}\\d \\A${Color_Off})"
     numprompt=1
   fi
   
