@@ -28,6 +28,7 @@ cat<<EOFF>zabbix_agent.conf
 PidFile=/tmp/zabbix_agentd.pid
 LogFile=/var/log/zabbix/zabbix_agentd.log
 LogFileSize=0
+DebugLevel=0
 Server=192.168.64.21
 ServerActive=192.168.64.21
 ListenPort=10050
