@@ -302,21 +302,21 @@ __myprompt() {
   esac
 
   # "[\\u@\\h ${pwd1}] \\\$ "
-  if [[ "${EASYPROMPT:-0}" -eq 1 ]]; then
-    PS1="${Color_Off}[${color1}\\u@${IPurple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+  if [[ "${EASYPROMPT-0}" = '1' ]]; then
+    PS1="${Color_Off}[${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
   fi
 
   # [ \\d \\A ${PROMPTMSG-}] 
   # [\\u@\\h ${pwd1}] \\\$ "
-  if [[ "${EASYPROMPT:-0}" -eq 2 ]]; then
-    PS1="${Color_Off} [ ${IBlue}\\d \\A ${Purple}${PROMPTMSG-}${Color_Off}] [${color1}\\u@${IPurple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
+  if [[ "${EASYPROMPT-0}" = '2' ]]; then
+    PS1="${Color_Off} [ ${IBlue}\\d \\A ${ICyan}${PROMPTMSG-}${Color_Off}] [${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
   fi
 
 
   # [\\u@\\h] ${PROMPTMSG-} 
   # ${pwd1} \\\$ "
-  if [[ "${EASYPROMPT:-0}" -eq 3 ]]; then
-    PS1="${Color_Off} [${color1}\\u@${IPurple}\\h${Color_Off}] ${Purple}${PROMPTMSG-}\\n${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
+  if [[ "${EASYPROMPT-0}" = '3' ]]; then
+    PS1="${Color_Off} [${color1}\\u@${Purple}\\h${Color_Off}] ${ICyan}${PROMPTMSG-}\\n${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
   
   export PS1
