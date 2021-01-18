@@ -310,12 +310,12 @@ __myprompt() {
   # [ \\d \\A ${PROMPTMSG-}] 
   # [\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '2' ]]; then
-    if [[ -n "${PROMPTMSG}" ]] ; then
+    if [[ -n "${PROMPTMSG-}" ]] ; then
       sp=' '
     else
       sp=''
     fi
-    PS1="${Color_Off} [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}$Color_Off}] [${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off} [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${Color_Off}] [${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
   fi
 
 
@@ -323,8 +323,8 @@ __myprompt() {
   # ${pwd1} \\\$ "
   if [[ "${EASYPROMPT-0}" = '3' ]]; then
     PS1="${Color_Off} [${color1}\\u@${Purple}\\h${Color_Off}]"
-    if [[ -n "${PROMPTMSG}" ]] ; then
-      PS1+=" [${ICyan}${PROMPTMSG}${Color_Off}]}"
+    if [[ -n "${PROMPTMSG-}" ]] ; then
+      PS1+=" [${ICyan}${PROMPTMSG}${Color_Off}]"
     fi
     PS1+="\\n${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
