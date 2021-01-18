@@ -155,11 +155,14 @@ __myprompt() {
 
   local sp=
   local numprompt=0
+
   local Color_Off='\[\e[m\]'
+  
   local Green='\[\e[0;32m\]'
   local Yellow='\[\e[0;33m\]'
   local Purple='\[\e[0;35m\]'
   local White='\[\e[0;37m\]'
+  
   local IRed='\[\e[0;91m\]'
   local IGreen='\[\e[0;92m\]'
   local IYellow='\[\e[0;93m\]'
@@ -167,6 +170,10 @@ __myprompt() {
   local IPurple='\[\e[0;95m\]'
   local ICyan='\[\e[0;96m\]'
 
+  local BRed='\[\e[1;31m\]'
+  local BGreen='\[\e[1;32m\]'
+
+  local color0=
   local color1=
   local pwd1="\\W"
 
@@ -181,16 +188,18 @@ __myprompt() {
   local EMOJ=
 
   if [[ ${CLICOLOR:-0} -eq 0 ]]; then
-    Green=${Color_Off}
-    Yellow=${Color_Off}
-    Purple=${Color_Off}
-    White=${Color_Off}
-    IRed=${Color_Off}
-    IGreen=${Color_Off}
-    IYellow=${Color_Off}
-    IBlue=${Color_Off}
-    IPurple=${Color_Off}
-    ICyan=${Color_Off}
+    Green=
+    Yellow=
+    Purple=
+    White=
+    IRed=
+    IGreen=
+    IYellow=
+    IBlue=
+    IPurple=
+    ICyan=
+    BRed=
+    BGreen=
   fi
 
   if [[ "${EXIT}" -eq 0 ]]; then
@@ -200,8 +209,10 @@ __myprompt() {
   fi
 
   if [[ $(/usr/bin/id -u) -eq 0 ]]; then
+    color0=${BRed}
     color1=${IRed}
   else
+    color0=${BGreen}
     color1=${IGreen}
     pwd1="\\w"
   fi
@@ -288,7 +299,7 @@ __myprompt() {
 
   PS1+="\\n└─"
 
-  PS1+="(${color1}\\u@${Purple}\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
+  PS1+="(${color0}\\u@${Purple}\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
 
   PS1+="${Color_Off}"
 
@@ -309,7 +320,7 @@ __myprompt() {
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+="\\n -- ${ICyan}${PROMPTMSG}${Color_Off} --"
     fi
-    PS1+="\\n[${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+    PS1+="\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
   fi
 
   # [ \\d \\A ${PROMPTMSG-}] 
@@ -320,14 +331,14 @@ __myprompt() {
     else
       sp=''
     fi
-    PS1="${Color_Off}\\n [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${Color_Off}] [${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n ${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off}\\n [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${Color_Off}] [${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n ${color1}\\\$ ${Color_Off}"
   fi
 
 
   # [\\u@\\h] ${PROMPTMSG-} 
   # ${pwd1} \\\$ "
   if [[ "${EASYPROMPT-0}" = '3' ]]; then
-    PS1="${Color_Off}\\n [${color1}\\u@${Purple}\\h${Color_Off}]"
+    PS1="${Color_Off}\\n [${color0}\\u@${Purple}\\h${Color_Off}]"
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+=" [${ICyan}${PROMPTMSG}${Color_Off}]"
     fi
@@ -342,13 +353,13 @@ __myprompt() {
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+="\\n -- ${ICyan}${PROMPTMSG}${Color_Off} --"
     fi
-    PS1+="\\n ${color1}\\u@${Purple}\\h ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
+    PS1+="\\n ${color0}\\u@${Purple}\\h ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
 
   
   # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '5' ]]; then
-    PS1="${Color_Off}\\n[${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off}\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
   fi
 
 
