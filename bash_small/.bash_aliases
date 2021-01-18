@@ -75,33 +75,34 @@ else
   LS_OPTION=
 fi
 
-alias og='ls $LS_OPTIONS -ogrt' 2>/dev/null
-alias ls='ls $LS_OPTIONS' 2>/dev/null
-alias ll='ls $LS_OPTIONS -l' 2>/dev/null
-alias lld='ls $LS_OPTIONS -ld' 2>/dev/null
-alias lla='ls $LS_OPTIONS -lA' 2>/dev/null
-alias la='ls $LS_OPTIONS -A' 2>/dev/null
-alias lt='ls $LS_OPTIONS -ltr' 2>/dev/null
-alias l='ls $LS_OPTIONS -CF' 2>/dev/null
-alias l.='ls -d .* $LS_OPTIONS' 2>/dev/null
-alias lsl='ls -lhFA | less'
-alias lsdate='ls $LS_OPTIONS -l --time-style="+%d-%m-%Y"' 2>/dev/null
+alias og="/usr/bin/ls $LS_OPTIONS -ogrt" 2>/dev/null
+alias ls="/usr/bin/ls $LS_OPTIONS" 2>/dev/null
+alias ll="/usr/bin/ls $LS_OPTIONS -l" 2>/dev/null
+alias lld="/usr/bin/ls $LS_OPTIONS -ld" 2>/dev/null
+alias lla="/usr/bin/ls $LS_OPTIONS -lA" 2>/dev/null
+alias llh="/usr/bin/ls $LS_OPTIONS -lah --time-style=+%F\\ %H:%M" 2>/dev/null
+alias la="/usr/bin/ls $LS_OPTIONS -A" 2>/dev/null
+alias lt="/usr/bin/ls $LS_OPTIONS -ltr" 2>/dev/null
+alias l="/usr/bin/ls $LS_OPTIONS -CF" 2>/dev/null
+alias l.="/usr/bin/ls -d .* $LS_OPTIONS" 2>/dev/null
+alias lsl="/usr/bin/ls -lhFA | /usr/bin/less"
+alias lsdate="/usr/bin/ls $LS_OPTIONS -l --time-style=+%d-%m-%Y" 2>/dev/null
 
-alias ffile='find . -type f -name '
-alias fhere='find . -name '
-alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
-alias mkdir='mkdir -pv'
-alias wget='wget -c'
-alias histg='history | grep'
-alias hostip='curl http://ipecho.net/plain; echo'
-alias net='netstat -ntulp'
-alias j='jobs -l'
-alias ports='netstat -tulanp'
+alias ffile='/usr/bin/find . -type f -name '
+alias fhere='/usr/bin/find . -name '
+alias psg='/usr/bin/ps aux | grep -v grep | grep -i -e VSZ -e'
+alias mkdir='/usr/bin/mkdir -pv'
+alias wget='/usr/bin/wget -c'
+alias histg="history | /usr/bin/grep $LS_OPTIONS"
+alias hostip='/usr/bin/curl http://ipecho.net/plain; echo'
+alias net='/usr/bin/netstat -ntulp'
+alias j='/usr/bin/jobs -l'
+alias ports='/usr/bin/netstat -tulanp'
 
-alias grep='grep $LS_OPTIONS'
-alias fgrep='grep $LS_OPTIONS'
-alias egrep='grep $LS_OPTIONS'
-alias diff='diff $LS_OPTIONS'
+alias grep="/usr/bin/grep $LS_OPTIONS"
+alias fgrep="/usr/bin/grep $LS_OPTIONS"
+alias egrep="/usr/bin/grep $LS_OPTIONS"
+alias diff="/usr/bin/diff $LS_OPTIONS"
 
 alias h='history 10'
 alias mc='. /usr/libexec/mc/mc-wrapper.sh'

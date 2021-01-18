@@ -34,3 +34,12 @@ unset -f pathmunge
 if [ -f ~/.bash_aliases ]; then
     . ~/.bash_aliases
 fi
+
+if [ -d ~/.config/bashrc.d ]; then
+  for i in `/usr/bin/ls ~/.config/bashrc.d/`; do
+    if [[ -f ~/.config/bashrc.d/${i} ]]; then
+      . ~/.config/bashrc.d/${i}
+    fi
+  done
+  unset i
+fi

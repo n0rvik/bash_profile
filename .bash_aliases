@@ -447,7 +447,7 @@ alias la="/usr/bin/ls $LS_OPTIONS -A" 2>/dev/null
 alias lt="/usr/bin/ls $LS_OPTIONS -ltr" 2>/dev/null
 alias l="/usr/bin/ls $LS_OPTIONS -CF" 2>/dev/null
 alias l.="/usr/bin/ls -d .* $LS_OPTIONS" 2>/dev/null
-alias lsl="/usr/bin/ls -lhFA | less"
+alias lsl="/usr/bin/ls -lhFA | /usr/bin/less"
 alias lsdate="/usr/bin/ls $LS_OPTIONS -l --time-style=+%d-%m-%Y" 2>/dev/null
 
 alias ffile='/usr/bin/find . -type f -name '
@@ -455,7 +455,7 @@ alias fhere='/usr/bin/find . -name '
 alias psg='/usr/bin/ps aux | /usr/bin/grep -v grep | /usr/bin/grep -i -e VSZ -e'
 alias mkdir='/usr/bin/mkdir -pv'
 alias wget='/usr/bin/wget -c'
-alias histg='history | /usr/bin/grep'
+alias histg='history | /usr/bin/grep $LS_OPTIONS'
 alias hostip='/usr/bin/curl http://ipecho.net/plain; echo'
 alias net='/usr/bin/netstat -ntulp'
 alias j='/usr/bin/jobs -l'

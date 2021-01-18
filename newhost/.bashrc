@@ -81,7 +81,7 @@ alias la="/usr/bin/ls $LS_OPTIONS -A" 2>/dev/null
 alias lt="/usr/bin/ls $LS_OPTIONS -ltr" 2>/dev/null
 alias l="/usr/bin/ls $LS_OPTIONS -CF" 2>/dev/null
 alias l.="/usr/bin/ls -d .* $LS_OPTIONS" 2>/dev/null
-alias lsl="/usr/bin/ls -lhFA | less"
+alias lsl="/usr/bin/ls -lhFA | /usr/bin/less"
 alias lsdate="/usr/bin/ls $LS_OPTIONS -l --time-style=+%d-%m-%Y" 2>/dev/null
 
 alias h='history 10'
@@ -107,3 +107,11 @@ else
 fi
 export PS1
 
+if [ -d ~/.config/bashrc.d ]; then
+  for i in `/usr/bin/ls ~/.config/bashrc.d/`; do
+    if [[ -f ~/.config/bashrc.d/${i} ]]; then
+      . ~/.config/bashrc.d/${i}
+    fi
+  done
+  unset i
+fi
