@@ -302,9 +302,14 @@ __myprompt() {
     ;;
   esac
 
+  # -- ${PROMPTMSG-} --
   # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '1' ]]; then
-    PS1="${Color_Off}\\n[${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off}"
+    if [[ -n "${PROMPTMSG-}" ]] ; then
+      PS1+="\\n -- ${ICyan}${PROMPTMSG}${Color_Off} --"
+    fi
+    PS1+="\\n[${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
   fi
 
   # [ \\d \\A ${PROMPTMSG-}] 
@@ -337,9 +342,16 @@ __myprompt() {
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+="\\n -- ${ICyan}${PROMPTMSG}${Color_Off} --"
     fi
-    PS1+="\\n ${Color_Off} ${color1}\\u@${Purple}\\h ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
+    PS1+="\\n ${color1}\\u@${Purple}\\h ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
+
   
+  # "[\\u@\\h ${pwd1}] \\\$ "
+  if [[ "${EASYPROMPT-0}" = '5' ]]; then
+    PS1="${Color_Off}\\n[${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+  fi
+
+
   export PS1
 }
 # ############
