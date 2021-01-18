@@ -20,7 +20,7 @@ export TERM=xterm-256color
 export COLORTERM=truecolor
 export CLICOLOR=1
 #export USER_LS_COLORS=1
-export LS_OPTIONS=
+LS_OPTIONS=
 
 # Сохранять все строки многострочной команды в одной записи списка истории
 shopt -s cmdhist
@@ -41,7 +41,7 @@ export HISTCONTROL=ignoreboth
 # export HISTCONTROL=ignorespace:ignoredups
 export HISTSIZE=100000
 export HISTFILESIZ=100000
-export HISTIGNORE="&:[bf]g:pwd:ls:ls -la:ls -ltr:ll:lld:lla:cd:exit:df:htop:atop:top:ps ax"
+#export HISTIGNORE="&:[bf]g:pwd:ls:ls -la:ls -ltr:ll:lld:lla:cd:exit:df:htop:atop:top:ps ax"
 export HISTTIMEFORMAT="%d/%h/%y - %H:%M:%S "
 # export HISTTIMEFORMAT='%h %d %H:%M:%S '
 # export HISTTIMEFORMAT="%d/%m/%y %T %t"
@@ -191,7 +191,7 @@ __myprompt() {
   # Friday
   local EMOJ=
 
-  if [[ ${CLICOLOR:-0} -eq 0 ]]; then
+  if [[ "${CLICOLOR:-0}" = '0' ]]; then
     Green=
     Yellow=
     Purple=
@@ -425,13 +425,15 @@ fi
 #    . /etc/profile.d/colorls.sh
 #fi
 
-if [[ -n "${CLICOLOR-}" ]]; then
-  export LS_OPTIONS='--color=auto'
+if [[ "${CLICOLOR-0}" = '1' ]]; then
+  LS_OPTIONS='--color=auto'
+else
+  LS_OPTIONS=
 fi
 
-alias grep='/usr/bin/grep --color=auto' 2>/dev/null
-alias fgrep='/usr/bin/grep --color=auto' 2>/dev/null
-alias egrep='/usr/bin/grep --color=auto' 2>/dev/null
+alias grep="/usr/bin/grep $LS_OPTIONS" 2>/dev/null
+alias fgrep="/usr/bin/grep $LS_OPTIONS" 2>/dev/null
+alias egrep="/usr/bin/grep $LS_OPTIONS" 2>/dev/null
 
 alias og="/usr/bin/ls $LS_OPTIONS -ogrt" 2>/dev/null
 alias ls="/usr/bin/ls $LS_OPTIONS" 2>/dev/null
@@ -446,7 +448,7 @@ alias lt="/usr/bin/ls $LS_OPTIONS -ltr" 2>/dev/null
 alias l="/usr/bin/ls $LS_OPTIONS -CF" 2>/dev/null
 alias l.="/usr/bin/ls -d .* $LS_OPTIONS" 2>/dev/null
 alias lsl="/usr/bin/ls -lhFA | less"
-alias lsdate="/usr/bin/ls $LS_OPTIONS -l --time-style='+%d-%m-%Y'" 2>/dev/null
+alias lsdate="/usr/bin/ls $LS_OPTIONS -l --time-style=+%d-%m-%Y" 2>/dev/null
 
 alias ffile='/usr/bin/find . -type f -name '
 alias fhere='/usr/bin/find . -name '

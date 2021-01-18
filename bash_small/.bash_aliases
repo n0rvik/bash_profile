@@ -9,10 +9,13 @@ esac
 export TERM=xterm-256color
 export COLORTERM=truecolor
 export CLICOLOR=1
-export USE_LS_COLORS=1
 
 myprompt() {
+
     history -a
+    history -c
+    history -r
+
     if [ "$CLICOLOR" == "1" ]; then
         if [ "$(id -u)" == "0" ]; then
             PS1='\[\e[m\][\[\e[1;31m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;31m\] \$\[\e[m\] '
@@ -41,10 +44,9 @@ shopt -s checkwinsize
 shopt -s extglob
 shopt -s globstar
 
-export HISTCONTROL=ignorespace:ignoredups
+export HISTCONTROL=ignoreboth
 export HISTSIZE=10000
 export HISTFILESIZ=10000
-export HISTIGNORE="&:[bf]g:pwd:ls:ls -la:ls -ltr:ll:cd:exit:df:htop:atop:top:ps ax"
 
 export LESS=-R
 export LESS_TERMCAP_mb=$'\E[1;31m'     # begin bold
@@ -67,7 +69,11 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
-export LS_OPTIONS='--color=auto'
+if [[ "${CLICOLOR-0}" = '1' ]]; then
+  LS_OPTIONS='--color=auto'
+else
+  LS_OPTION=
+fi
 
 alias og='ls $LS_OPTIONS -ogrt' 2>/dev/null
 alias ls='ls $LS_OPTIONS' 2>/dev/null
@@ -92,12 +98,12 @@ alias net='netstat -ntulp'
 alias j='jobs -l'
 alias ports='netstat -tulanp'
 
-alias grep='grep --color=auto'
-alias fgrep='grep --color=auto'
-alias egrep='grep --color=auto'
-alias diff='diff --color=auto'
+alias grep='grep $LS_OPTIONS'
+alias fgrep='grep $LS_OPTIONS'
+alias egrep='grep $LS_OPTIONS'
+alias diff='diff $LS_OPTIONS'
 
-alias h='history 5'
+alias h='history 10'
 alias mc='. /usr/libexec/mc/mc-wrapper.sh'
 
 export PROMPT_COMMAND=myprompt
