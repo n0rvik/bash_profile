@@ -170,19 +170,23 @@ __myprompt() {
   local IPurple='\[\e[0;95m\]'
   local ICyan='\[\e[0;96m\]'
 
+  local BBlack='\[\e[1;30m\]'
   local BRed='\[\e[1;31m\]'
   local BGreen='\[\e[1;32m\]'
 
   local color0=
   local color1=
+  # Exit code
+  local color2=
+  # Color frame
+  local color3=
+
   local pwd1="\\W"
 
   local WHO=$(/usr/bin/who | /usr/bin/wc -l)
   local TTY=$(/usr/bin/tty | /usr/bin/cut -d/ -f4)
   local JBS=$(/usr/bin/jobs -l | /usr/bin/wc -l)
   
-  # Exit code
-  local color2=
 
   # Friday
   local EMOJ=
@@ -198,9 +202,12 @@ __myprompt() {
     IBlue=
     IPurple=
     ICyan=
+    BBlack=
     BRed=
     BGreen=
   fi
+
+  color3="${Color_off}${BBlack}"
 
   if [[ "${EXIT}" -eq 0 ]]; then
     color2=${IGreen}
@@ -222,12 +229,12 @@ __myprompt() {
     pwd1="\\w"
   fi
 
-  PS1="${Color_Off}\\n┌"
+  PS1="${color3}\\n┌"
 
   # Friday
   if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
     EMOJ=`printf '\U263C'`
-    PS1+="(${Yellow}${EMOJ}${Color_Off})"
+    PS1+="(${Yellow}${EMOJ}${color3})"
     numprompt=1
   fi
 
@@ -236,7 +243,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="( -- ${ICyan}${PROMPTMSG-}${Color_Off} -- )"
+    PS1+="( -- ${ICyan}${PROMPTMSG-}${color3} -- )"
     numprompt=1
   fi
 
@@ -246,7 +253,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(${IBlue}\\d \\A${Color_Off})"
+    PS1+="(${IBlue}\\d \\A${color3})"
     numprompt=1
   fi
   
@@ -257,7 +264,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(err:${color2}${EXIT}${Color_Off})"
+    PS1+="(err:${color2}${EXIT}${color3})"
     numprompt=1
   fi
 
@@ -266,7 +273,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(jobs:${Green}${JBS}${Color_Off})"
+    PS1+="(jobs:${Green}${JBS}${color3})"
     numprompt=1
   fi
 
@@ -275,7 +282,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(who:${White}${WHO}${Color_Off})"
+    PS1+="(who:${White}${WHO}${color3})"
     numprompt=1
   fi
 
@@ -284,7 +291,7 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(tty:${White}${TTY}${Color_Off})"
+    PS1+="(tty:${White}${TTY}${color3})"
     numprompt=1
   fi
 
@@ -293,13 +300,13 @@ __myprompt() {
     if [[ "${numprompt}" -gt 0 ]]; then
       PS1+="─"
     fi
-    PS1+="(${IPurple}mc${Color_Off})"
+    PS1+="(${IPurple}mc${color3})"
     numprompt=1
   fi
 
   PS1+="\\n└─"
 
-  PS1+="(${color0}\\u@${Purple}\\h${Color_Off})─(${Yellow}${pwd1}${Color_Off}) ${color1}\\\$ "
+  PS1+="(${color0}\\u@${Purple}\\h${color3})─(${Yellow}${pwd1}${color3}) ${color1}\\\$ "
 
   PS1+="${Color_Off}"
 
@@ -316,11 +323,11 @@ __myprompt() {
   # -- ${PROMPTMSG-} --
   # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '1' ]]; then
-    PS1="${Color_Off}"
+    PS1="${color3}"
     if [[ -n "${PROMPTMSG-}" ]] ; then
-      PS1+="\\n -- ${ICyan}${PROMPTMSG}${Color_Off} --"
+      PS1+="\\n -- ${ICyan}${PROMPTMSG}${color3} --"
     fi
-    PS1+="\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+    PS1+="\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}] ${color1}\\\$ ${Color_Off}"
   fi
 
   # [ \\d \\A ${PROMPTMSG-}] 
@@ -331,16 +338,16 @@ __myprompt() {
     else
       sp=''
     fi
-    PS1="${Color_Off}\\n [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${Color_Off}] [${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n ${color1}\\\$ ${Color_Off}"
+    PS1="${color3}\\n [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${color3}] [${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}]\\n ${color1}\\\$ ${Color_Off}"
   fi
 
 
   # [\\u@\\h] ${PROMPTMSG-} 
   # ${pwd1} \\\$ "
   if [[ "${EASYPROMPT-0}" = '3' ]]; then
-    PS1="${Color_Off}\\n [${color0}\\u@${Purple}\\h${Color_Off}]"
+    PS1="${color3}\\n [${color0}\\u@${Purple}\\h${color3}]"
     if [[ -n "${PROMPTMSG-}" ]] ; then
-      PS1+=" [${ICyan}${PROMPTMSG}${Color_Off}]"
+      PS1+=" [${ICyan}${PROMPTMSG}${color3}]"
     fi
     PS1+="\\n ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
@@ -349,9 +356,9 @@ __myprompt() {
   # -- ${PROMPTMSG-} --
   # \\u@\\h ${pwd1} \\\$ "
   if [[ "${EASYPROMPT-0}" = '4' ]]; then
-    PS1="${Color_Off}"
+    PS1="${color3}"
     if [[ -n "${PROMPTMSG-}" ]] ; then
-      PS1+="\\n -- ${ICyan}${PROMPTMSG}${Color_Off} --"
+      PS1+="\\n -- ${ICyan}${PROMPTMSG}${color3} --"
     fi
     PS1+="\\n ${color0}\\u@${Purple}\\h ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
@@ -359,7 +366,7 @@ __myprompt() {
   
   # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '5' ]]; then
-    PS1="${Color_Off}\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}] ${color1}\\\$ ${Color_Off}"
+    PS1="${color3}\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}] ${color1}\\\$ ${Color_Off}"
   fi
 
 
