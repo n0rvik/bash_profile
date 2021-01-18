@@ -153,6 +153,7 @@ __myprompt() {
   history -c
   history -r
 
+  local sp=
   local numprompt=0
   local Color_Off='\[\e[m\]'
   local Green='\[\e[0;32m\]'
@@ -309,14 +310,23 @@ __myprompt() {
   # [ \\d \\A ${PROMPTMSG-}] 
   # [\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '2' ]]; then
-    PS1="${Color_Off} [ ${IBlue}\\d \\A ${ICyan}${PROMPTMSG+$PROMPTMSG }${Color_Off}] [${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
+    if [[ -n "${PROMPTMSG}" ]] ; then
+      sp=' '
+    else
+      sp=''
+    fi
+    PS1="${Color_Off} [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}$Color_Off}] [${color1}\\u@${Purple}\\h ${Yellow}${pwd1}${Color_Off}]\\n${color1}\\\$ ${Color_Off}"
   fi
 
 
   # [\\u@\\h] ${PROMPTMSG-} 
   # ${pwd1} \\\$ "
   if [[ "${EASYPROMPT-0}" = '3' ]]; then
-    PS1="${Color_Off} [${color1}\\u@${Purple}\\h${Color_Off}] ${PROMPTMSG+[${ICyan}${PROMPTMSG}${Color_Off}]}\\n${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off} [${color1}\\u@${Purple}\\h${Color_Off}]"
+    if [[ -n "${PROMPTMSG}" ]] ; then
+      PS1+=" [${ICyan}${PROMPTMSG}${Color_Off}]}"
+    fi
+    PS1+="\\n${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
   
   export PS1
