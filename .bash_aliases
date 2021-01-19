@@ -369,6 +369,10 @@ __myprompt() {
     PS1="${color3}\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}] ${color1}\\\$ ${Color_Off}"
   fi
 
+  # " \\\$ "
+  if [[ "${EASYPROMPT-0}" = '6' ]]; then
+    PS1="${Color_Off}\\n ${color1}\\\$ ${Color_Off}"
+  fi
 
   export PS1
 }
