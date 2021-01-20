@@ -77,7 +77,7 @@ bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
 
-if [[ "${CLICOLOR-0}" -eq 1 ]]; then
+if [[ "${CLICOLOR-0}" = '1' ]]; then
   PS1='\[\e[m\] \[\e[0;94m\]\d \A \l\n\[\e[m\]['
   if [[ $(/usr/bin/id -u) -eq 0 ]]; then
     PS1+='\[\e[0;91m\]\u@\[\e[0;35m\]\h \[\e[0;33m\]\W\[\e[m\]] \[\e[0;91m\]\$ \[\e[m\]'
