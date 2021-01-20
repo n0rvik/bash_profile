@@ -22,6 +22,16 @@
 TERM *256color*
 TERM rxvt-unicode256
 
+TERM putty-256color
+TERM rxvt-256color
+TERM rxvt-unicode-256color
+TERM rxvt-unicode256
+TERM screen-256color
+TERM xterm-256color
+TERM gnome-256color
+TERM st-256color
+
+
 # Below are the color init strings for the basic file types. A color init
 # string consists of one or more of the following numeric codes:
 # Attribute codes:
@@ -77,8 +87,8 @@ EXEC 38;5;40
 #.bat 01;32
 # Or if you want to colorize scripts even if they do not have the
 # executable bit actually set.
-#.sh  01;32
-#.csh 01;32
+.sh  01;32
+.csh 01;32
 
  # archives or compressed (bright red)
 .tar 38;5;9
@@ -200,3 +210,29 @@ EXEC 38;5;40
 .opus 38;5;45
 .spx 38;5;45
 .xspf 38;5;45
+
+# colorize text documents (brown)
+.txt 38;5;94
+.log 38;5;94
+.htm 38;5;94
+.html 38;5;94
+.shtml 38;5;94
+.xml 38;5;94
+
+.conf 38;5;149
+.cfg 38;5;149
+
+.key 38;5;141
+.cer 38;5;141
+.crt 38;5;141
+.pem 38;5;141
+
+.bash_aliases 38;5;134
+.bash_history 38;5;134
+.bash_logout 38;5;134
+.bash_profile 38;5;134
+.bashrc 38;5;134
+.dir_colors 38;5;134
+
+.patch 38;5;105
+.diff 38;5;105:
