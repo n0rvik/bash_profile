@@ -6,6 +6,7 @@
 
 _toskel=/etc/skel
 
+[ -f "$_toskel/.bash_aliases" ] && rm -v $_toskel/.bash_aliases
 #cp -v ./.bash_aliases $_toskel/.bash_aliases
 cp -v ./.bash_profile $_toskel/.bash_profile
 cp -v ./.bashrc       $_toskel/.bashrc
