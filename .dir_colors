@@ -218,14 +218,44 @@ EXEC 38;5;40
 .html 38;5;94
 .shtml 38;5;94
 .xml 38;5;94
+.exclude 38;5;94
+.letter 38;5;94
+.last_login 38;5;94
+.deny 38;5;94
+.allow 38;5;94
+.misc 38;5;94
+.master 38;5;94
+.fish 38;5;94
+.net 38;5;94
+.updated 38;5;94
 
-.conf 38;5;149
-.cfg 38;5;149
+.conf 38;5;100
+.cfg 38;5;100
+.my.cnf 38;5;100
+.cnf 38;5;100
+.ini 38;5;100
+.types 38;5;100
+.rc 38;5;100
+
+.pgpass 38;5;151
+.rsync_pass 38;5;151
+.pass 38;5;151
+.scrt 38;5;151
 
 .key 38;5;141
 .cer 38;5;141
 .crt 38;5;141
 .pem 38;5;141
+.fingerprint 38;5;141
+.md5 38;5;141
+.keytab 38;5;141
+.keys 38;5;141
+
+.db 38;5;68
+.list 38;5;68
+.lst 38;5;68
+.cache 38;5;68
+.defs 38;5;68
 
 .bash_aliases 38;5;134
 .bash_history 38;5;134
@@ -233,6 +263,34 @@ EXEC 38;5;40
 .bash_profile 38;5;134
 .bashrc 38;5;134
 .dir_colors 38;5;134
+.dircolors 38;5;134
+.tcshrc 38;5;134
+.cshrc 38;5;134
+.zsh 38;5;134
+.login 38;5;134
+
+.selected_editor 38;5;132
+.rnd 38;5;132
+.vimrc 38;5;132
+.viminfo 38;5;132
+.psql_history 38;5;132
+.mysql_history 38;5;132
+.lesshst 38;5;132
+.hgrc 38;5;132
+.gitconfig 38;5;132
+.id 38;5;132
+.state 38;5;132
+.rediscli_history 38;5;132
+.searchhistory 38;5;132
+.lastlogin  38;5;132
+.lsshst 38;5;132
+.lock 38;5;132
+.pwd.lock 38;5;132
+
+.bak 38;5;90;1
+.ipabkp 38;5;90;1
 
 .patch 38;5;105
-.diff 38;5;105:
+.diff 38;5;105
+.orig 38;5;105
+
