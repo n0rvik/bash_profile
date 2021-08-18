@@ -516,8 +516,8 @@ if type grc &>/dev/null; then
    export GRC_ALIASES=true
    if [[ -r ~/.grc.sh ]]; then
        . ~/.grc.sh
-   elif [[ -r /etc/grc.sh ]]; then
-       . /etc/grc.sh
+   elif [[ -r /etc/profile.d/grc.sh ]]; then
+       . /etc/profile.d/grc.sh
    fi
 fi
 
