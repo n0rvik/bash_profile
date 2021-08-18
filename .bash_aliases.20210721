@@ -513,11 +513,10 @@ fi
 
 # https://github.com/garabik/grc
 if type grc &>/dev/null; then
-   export GRC_ALIASES=true
-   if [[ -r ~/.grc.sh ]]; then
-       . ~/.grc.sh
-   elif [[ -r /etc/grc.sh ]]; then
-       . /etc/grc.sh
+   if [[ -r ~/.grc.bashrc ]]; then
+       . ~/.grc.bashrc
+   elif [[ -r /etc/grc.bashrc ]]; then
+       . /etc/grc.bashrc
    fi
 fi
 
