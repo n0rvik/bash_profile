@@ -13,7 +13,7 @@ set -u
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
 
 LOCK_FILE=/var/run/aide.lock
-MAIL_ADDR=root@${HOSTNAME}
+MAIL_ADDR=root@localhost
 AIDE=$(which aide)
 NICE=$(which nice)
 RM=$(which rm)
