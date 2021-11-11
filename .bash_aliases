@@ -25,7 +25,8 @@ LS_OPTIONS=
 # Сохранять все строки многострочной команды в одной записи списка истории
 shopt -s cmdhist
 shopt -s histappend
-# bash начнёт понимать опечатки и будет переносить вас в папку, название которой вы набрали с ошибкой
+# bash начнёт понимать опечатки и будет переносить вас в папку, 
+# название которой вы набрали с ошибкой
 shopt -s cdspell
 shopt -s checkwinsize
 # активирует функции, которые чаще ассоциируются с регулярными выражениями.
@@ -42,6 +43,7 @@ export HISTCONTROL=ignoreboth
 export HISTSIZE=100000
 export HISTFILESIZ=100000
 #export HISTIGNORE="&:[bf]g:pwd:ls:ls -la:ls -ltr:ll:lld:lla:cd:exit:df:htop:atop:top:ps ax"
+export HISTIGNORE="ls:ll:lld:lla:lls:h:history:w:htop:atop:df"
 export HISTTIMEFORMAT="%d/%h/%y - %H:%M:%S "
 # export HISTTIMEFORMAT='%h %d %H:%M:%S '
 # export HISTTIMEFORMAT="%d/%m/%y %T %t"
