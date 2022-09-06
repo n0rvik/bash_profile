@@ -136,7 +136,7 @@ function __tar_backup()
 # Приглашение имеет вид
 #   1       2             3         4          5        6
 # ┌(*)─(This is MSG)─(Thu Jan 14)─(12:42)─(e0:j0:w1:t1)─(mc)
-# └─(root@ov-ansible)─(bin)#
+# └─(root@ov-ansible)─(bin) #
 #     7        8        9
 # 1 Символ пятницы
 # 2 Сообщение в приглашении, перем PROMPTMSG
@@ -308,7 +308,7 @@ __myprompt() {
 
   PS1+="\\n└─"
 
-  PS1+="(${color0}\\u@${Purple}\\h${color3})─(${Yellow}${pwd1}${color3})${color1}\\\$ "
+  PS1+="(${color0}\\u@${Purple}\\h${color3})─(${Yellow}${pwd1}${color3}) ${color1}\\\$ "
 
   PS1+="${Color_Off}"
 
@@ -323,24 +323,24 @@ __myprompt() {
   esac
 
   # -- ${PROMPTMSG-} --
-  # "[\\u@\\h ${pwd1}]\\\$ "
+  # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '1' ]]; then
     PS1="${color3}"
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+="\\n -- ${ICyan}${PROMPTMSG}${color3} --"
     fi
-    PS1+="\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}]${color1}\\\$ ${Color_Off}"
+    PS1+="\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}] ${color1}\\\$ ${Color_Off}"
   fi
 
   # [ \\d \\A ${PROMPTMSG-}] 
-  # [\\u@\\h ${pwd1}]\\\$ "
+  # [\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '2' ]]; then
     if [[ -n "${PROMPTMSG-}" ]] ; then
       sp=' '
     else
       sp=''
     fi
-    PS1="${color3}\\n [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${color3}] [${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}]\\n${color1}\\\$ ${Color_Off}"
+    PS1="${color3}\\n [${IBlue}\\d \\A${sp}${ICyan}${PROMPTMSG}${color3}] [${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}]\\n ${color1}\\\$ ${Color_Off}"
   fi
 
 
@@ -351,7 +351,7 @@ __myprompt() {
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+=" [${ICyan}${PROMPTMSG}${color3}]"
     fi
-    PS1+="\\n ${Yellow}${pwd1}${color1} \\\$ ${Color_Off}"
+    PS1+="\\n ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
   
 
@@ -362,18 +362,18 @@ __myprompt() {
     if [[ -n "${PROMPTMSG-}" ]] ; then
       PS1+="\\n -- ${ICyan}${PROMPTMSG}${color3} --"
     fi
-    PS1+="\\n ${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color1} \\\$ ${Color_Off}"
+    PS1+="\\n ${color0}\\u@${Purple}\\h ${Yellow}${pwd1} ${color1}\\\$ ${Color_Off}"
   fi
 
   
-  # "[\\u@\\h ${pwd1}]\\\$ "
+  # "[\\u@\\h ${pwd1}] \\\$ "
   if [[ "${EASYPROMPT-0}" = '5' ]]; then
-    PS1="${color3}\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}]${color1}\\\$ ${Color_Off}"
+    PS1="${color3}\\n[${color0}\\u@${Purple}\\h ${Yellow}${pwd1}${color3}] ${color1}\\\$ ${Color_Off}"
   fi
 
-  # "\\\$ "
+  # " \\\$ "
   if [[ "${EASYPROMPT-0}" = '6' ]]; then
-    PS1="${Color_Off}\\n${color1}\\\$ ${Color_Off}"
+    PS1="${Color_Off}\\n ${color1}\\\$ ${Color_Off}"
   fi
 
   export PS1
@@ -544,4 +544,4 @@ fi
 #fi
 
 export PROMPT_COMMAND='__myprompt'
-export PS1='[\u@\h \W]\$ '
+export PS1='[\u@\h \W] \$ '
