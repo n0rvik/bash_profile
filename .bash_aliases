@@ -509,6 +509,10 @@ alias mc='. /usr/libexec/mc/mc-wrapper.sh'
 
 alias myip="/usr/bin/ip a | /usr/bin/grep inet | /usr/bin/grep 'scope global'"
 
+alias myextip='dig @resolver4.opendns.com myip.opendns.com +short'
+# alias myextip='curl -s http://whatismyip.akamai.com/'
+# alias myextip='curl -s ipinfo.io/ip'
+
 if type -P vim &>/dev/null; then
     alias vi=/usr/bin/vim
 fi
