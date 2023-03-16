@@ -1,12 +1,27 @@
 #!/bin/bash
 
+#
+#   Это более простой вариант проверки целостности файлов
+#   по сравнению с https://www.rfxn.com/data-integrity-aide-for-host-based-intrusion-detection/
+#   
+#   Исходник https://www.hiroom2.com/2017/06/09/centos-7-file-integrity-check-with-aide/
+#
+
 # FILE: /etc/cron.daily/runaide
-# INSTALL: yum install aide mailx liblockfile postfix mutt
+#
+# 1. INSTALL: yum install aide mailx liblockfile postfix mutt
+# 
+# 2. Перед первым запуском отредактируйте /etc/aide.conf
+# и запустите 
+#
 # aide --config-check
 # aide --init
 # cp /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz
-# cp aide1.sh /etc/cron.daily/runaide
-# chmod 755 /etc/cron.daily/runaide
+#
+# 3. Создайте задачу cron
+#
+# cp aide1.sh /etc/cron.daily/aide
+# chmod 755 /etc/cron.daily/aide
 
 set -u
 
