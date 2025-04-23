@@ -1,0 +1,63 @@
+# .bash_aliases
+
+# interactive shell - OK
+case $- in
+    *i*) ;;
+      *) return;;
+esac
+
+export TERM=xterm-256color
+export COLORTERM=truecolor
+
+if [ "$(/usr/bin/id -u)" = "0" ]; then
+    PS1='\[\e[m\][\[\e[1;31m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;31m\]\$\[\e[m\] '
+else
+    PS1='\[\e[m\][\[\e[1;32m\]\u@\h\[\e[m\] \[\e[0;33m\]\W\[\e[m\]]\[\e[1;32m\]\$\[\e[m\] '
+fi
+
+# PS1='\[\e[m\][\u@\h \W]\$ '
+
+bind 'set show-all-if-ambiguous On'
+bind 'TAB:menu-complete'
+bind 'set menu-complete-display-prefix on'
+bind 'set completion-ignore-case On'
+
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+bind '"\e[C": forward-char'
+bind '"\e[D": backward-char'
+
+export LS_OPTIONS='--color=auto'
+
+alias og='ls $LS_OPTIONS -ogrt' 2>/dev/null
+alias ls='ls $LS_OPTIONS' 2>/dev/null
+alias ll='ls $LS_OPTIONS -l' 2>/dev/null
+alias lld='ls $LS_OPTIONS -ld' 2>/dev/null
+alias lla='ls $LS_OPTIONS -lA' 2>/dev/null
+alias la='ls $LS_OPTIONS -A' 2>/dev/null
+alias lt='ls $LS_OPTIONS -ltr' 2>/dev/null
+alias l='ls $LS_OPTIONS -CF' 2>/dev/null
+alias l.='ls -d .* $LS_OPTIONS' 2>/dev/null
+alias lsl='ls -lhFA | less'
+alias lsdate='ls $LS_OPTIONS -l --time-style="+%d-%m-%Y"' 2>/dev/null
+
+alias ffile='find . -type f -name '
+alias fhere='find . -name '
+alias psg='ps aux | grep -v grep | grep -i -e VSZ -e'
+alias mkdir='mkdir -pv'
+alias wget='wget -c'
+alias histg='history | grep'
+alias hostip='curl http://ipecho.net/plain; echo'
+alias net='netstat -ntulp'
+alias j='jobs -l'
+alias ports='netstat -tulanp'
+
+alias grep='grep --color=auto'
+alias fgrep='grep --color=auto'
+alias egrep='grep --color=auto'
+alias diff='diff --color=auto'
+
+alias h='history 5'
+alias mc='. /usr/libexec/mc/mc-wrapper.sh'
+# Ubuntu alias mc='. /usr/lib/mc/mc-wrapper.sh'
+

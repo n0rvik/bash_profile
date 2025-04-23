@@ -1,5 +1,6 @@
 " Поддержка цвета
 set t_Co=256
+set term=xterm-256color
 
 " количество пробелов, которыми символ табуляции отображается в тексте
 set tabstop=4
@@ -48,7 +49,7 @@ set ruler
 " цветовая схема
 colorscheme delek
 " colorscheme xoria256
-" colorscheme вуыуке
+" colorscheme desert
 syntax on
 
 " поиск без заглавных букв становится нечувствителен к регистру
