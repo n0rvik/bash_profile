@@ -235,7 +235,7 @@ __myprompt() {
 
   # Friday
   if [[ $(/usr/bin/date +%u) -ge 5 ]]; then
-    EMOJ=`printf '\U263C'`
+    EMOJ=`printf '\xe2\x98\xbc'`
     PS1+="(${Yellow}${EMOJ}${color3})"
     numprompt=1
   fi
